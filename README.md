@@ -1,5 +1,8 @@
 ## My Dotti Files And the  Systems They Run On.
 This repo contains dotfiles from all my linux boxes i think are worth keeping around. maybe windows too someday.
+The directory `centos-vm` contains the configs of my centos 7 minimal box. No GUI, so most the things do not work
+in the system. The `buntufigs` directory on the other hand holds the configs of my lubuntu with GUI config files. Most
+of the things there should work for almost all GUI linux environments.
 
 My setups include:
 - Lubuntu on a 2gb ram Toshiba sattelite laptop
