@@ -14,7 +14,9 @@ esac
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 if [ -f /etc/bashrc ]; then
     . /etc/bashrc
-elif [ -f ~/.bash_aliases ]; then
+fi
+    
+if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
