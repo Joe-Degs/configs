@@ -1,0 +1,1 @@
+C:/Users/BUYA-PC/AppData/Local/nvim/init.vim
