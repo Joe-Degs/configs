@@ -27,7 +27,7 @@ fi
 
 # display git branch when in git repository.
 parse_git_branch() {
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/gnit:(\1)/'
 }
 
 # change ps1
