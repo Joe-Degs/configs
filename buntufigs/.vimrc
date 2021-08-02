@@ -5,6 +5,9 @@ set ruler
 set encoding=utf-8
 set fileencoding=utf-8
 colo gruvbox
+set colorcolumn=85
+set relativenumber
+set scrolloff=5
 
 " filetypes, whitespaces and cursor motion
 set wrap
@@ -12,6 +15,7 @@ set formatoptions=tcqrn1
 autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
 autocmd Filetype go setlocal tabstop=4 shiftwidth=4 softtabstop=4
 autocmd Filetype sh setlocal tabstop=4 shiftwidth=4 softtabstop=4
+set tabstop=4 softtabstop=4
 set expandtab
 set noshiftround
 set shiftwidth=4
@@ -38,6 +42,7 @@ set undodir=~/.vim/undodir
 nnoremap / /\v
 nnoremap / /\v
 set hlsearch
+set nohlsearch
 set incsearch
 set ignorecase
 set smartcase
