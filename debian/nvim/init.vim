@@ -47,11 +47,12 @@ Plug 'fatih/vim-go'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 
-"because long yaml files hurt brain
+" because long yaml files hurt brain
 Plug 'Yggdroot/indentLine'
 
 " solidity for smart contracts
 Plug 'TovarishFin/vim-solidity'
+
 call plug#end()
 
 " Base 16 colorscheme
@@ -67,7 +68,7 @@ let g:rust_clip_command = 'xclip -selection clipboard'
 
 " golang
 let g:go_play_open_browser = 0
-let g:go_fmt_fail_silently = 1
+let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
 let g:go_auto_type_info = 1
 let g:go_bin_path = expand("~/go/bin")
@@ -92,9 +93,12 @@ set nowrap
 set noswapfile
 set nojoinspaces
 let g:sneak#s_next = 1
-let g:vim_markdown_new_list_item_indent = 0
-let g:vim_markdown_auto_insert_bullets = 0
-let g:vim_markdown_frontmatter = 1
+
+" Markdown
+" let g:vim_markdown_new_list_item_indent = 0
+" let g:vim_markdown_auto_insert_bullets = 0
+" let g:vim_markdown_frontmatter = 1
+
 set printfont=:h10
 set printencoding=utf-8
 set printoptions=paper:letter

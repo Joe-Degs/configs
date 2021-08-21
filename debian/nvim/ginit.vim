@@ -26,7 +26,7 @@ set listchars=nbsp:¬,extends:»,precedes:«,trail:•
 " Set Editor Font
 if exists(':GuiFont')
 " Use GuiFont! to ignore font errors
-    GuiFont! Noto Sans Mono:h10
+    GuiFont! Noto Sans Mono:h9
 endif
 
 " Disable GUI Tabline
