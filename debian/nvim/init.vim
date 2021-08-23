@@ -45,10 +45,6 @@ Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'fatih/vim-go'
 Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
-
-" because long yaml files hurt brain
-Plug 'Yggdroot/indentLine'
 
 " solidity for smart contracts
 Plug 'TovarishFin/vim-solidity'
@@ -93,11 +89,6 @@ set nowrap
 set noswapfile
 set nojoinspaces
 let g:sneak#s_next = 1
-
-" Markdown
-" let g:vim_markdown_new_list_item_indent = 0
-" let g:vim_markdown_auto_insert_bullets = 0
-" let g:vim_markdown_frontmatter = 1
 
 set printfont=:h10
 set printencoding=utf-8
@@ -157,11 +148,10 @@ set incsearch
 set ignorecase
 set smartcase
 set gdefault
-set nohlsearch
 
 " Ctrl+h to stop searching
-"vnoremap <C-h> :nohlsearch<cr>
-"nnoremap <C-h> :nohlsearch<cr>
+vnoremap <C-h> :nohlsearch<cr>
+nnoremap <C-h> :nohlsearch<cr>
 
 " Suspend with Ctrl+f
 inoremap <C-f> :sus<cr>
