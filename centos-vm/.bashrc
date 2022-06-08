@@ -21,7 +21,7 @@ mcd() {
     cd $1
 }
 
-# currently having lots of trouble accessing the docs for golang.org/x/* docs
+# currently having lots of trouble accessing the docs for golang.org/x/* files
 # beacause go doc uses go modules and i can only have the documentation
 # if i have them them included in my go.mod file. So this functions help me
 # access the docs for x packages from anywhere on this box.
