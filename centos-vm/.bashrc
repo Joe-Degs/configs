@@ -37,3 +37,10 @@ gxd() {
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=~/go
 export PATH=$PATH:$GOPATH/bin
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+if type rg &> /dev/null; then
+  export FZF_DEFAULT_COMMAND='rg --files'
+  export FZF_DEFAULT_OPTS='-m --height 50% --border'
+fi

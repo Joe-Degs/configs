@@ -39,8 +39,7 @@ export PATH
 
 # Start new tmux session
 tmux_session(){
-    local day = $(date | cut -d ' ' -f1) 
+    local day=$(date | cut -d ' ' -f1) 
     tmux new -s $day > /dev/null 2>&1
-    tmux detach -s $day
 }
 tmux_session

@@ -15,3 +15,5 @@
 	postBuffer = 524288000
 [credential]
 	helper = store
+[pull]
+	ff = only
