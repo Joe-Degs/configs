@@ -43,3 +43,5 @@ tmux_session(){
     tmux new -s $day > /dev/null 2>&1
 }
 tmux_session
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
