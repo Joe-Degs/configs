@@ -60,7 +60,11 @@ set showmatch
 " terminal
 set t_Co=256
 set background=dark
-colo pablo
+colo habamax
+
+" golang commands
+let g:go_fmt_command = "goimports"
+let g:go_auto_type_info = 1
 
 " fuzzy searching and things
 set rtp+=~/.fzf
