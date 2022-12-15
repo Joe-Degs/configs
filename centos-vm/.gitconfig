@@ -16,4 +16,8 @@
 [credential]
 	helper = store
 [pull]
-	ff = only
+    ff = only
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
+[url "ssh://git@gitlab.mpharma.com/"]
+    insteadOf = https://gitlab.mpharma.com/
