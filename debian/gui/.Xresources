@@ -1,10 +1,10 @@
-Xft.dpi: 192
-Xft.autohint: 0
-Xft.lcdfilter: lcddefault
-Xft.hintstyle: hintslight
-Xft.hinting: 1
-Xft.antialias: 1
-Xft.rgba: rgb
+! Xft.dpi: 192
+! Xft.autohint: 0
+! Xft.lcdfilter: lcddefault
+! Xft.hintstyle: hintslight
+! Xft.hinting: 1
+! Xft.antialias: 1
+! Xft.rgba: rgb
 
 ! ===== xterm ========
 *VT100.utf8Fonts.font2:	-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1

@@ -19,13 +19,15 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
-set noshiftround
+"set noshiftround
 
 set undofile
 set undodir=~/.vim/undodir
 
 " from the kernel guidelines.
 autocmd Filetype c setlocal shiftwidth=8 tabstop=8 softtabstop=8 noexpandtab cindent cc=80 | %retab | autocmd BufWritePre * %s/\s\+$//e
+
+autocmd Filetype yaml setlocal ts=2 sw=2 sts=2 et
 
 " Hardcore mode, disable arrow keys.
 noremap <Up> <NOP>
@@ -61,6 +63,7 @@ set showmatch
 set t_Co=256
 set background=dark
 colo habamax
+hi Normal guibg=NONE ctermbg=NONE
 
 " golang commands
 let g:go_fmt_command = "goimports"
