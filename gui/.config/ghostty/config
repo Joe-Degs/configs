@@ -1,0 +1,14 @@
+command = /usr/bin/bash
+click-repeat-interval = 500
+auto-update-channel = tip
+shell-integration-features = no-cursor
+
+# fonts
+font-family = "Iosevka Extended"
+cursor-style = block
+cursor-style-blink = false
+
+# decor
+theme = "Adwaita Dark"
+background-opacity = 0.8
+unfocused-split-opacity = 0.7

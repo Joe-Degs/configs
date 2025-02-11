@@ -1,0 +1,247 @@
+// -*- mode: jsonc -*-
+{
+    // Workspaces
+    "hyprland/workspaces" : {
+        "on-click": "activate",
+        "active-only": false,
+        "all-outputs": false,
+        "format": "{}",
+        "format-icons": {
+            "urgent": "",
+            "active": "",
+            "default": ""
+        },
+        "window-rewrite": {
+            "kitty": "",
+            "htop": "",
+            "Google-chrome": "",
+            "Spotify": "",
+            "Discord": "",
+            "Thunar": "",
+            "swappy": "",
+            "code": "",
+            "OBS": "󰻃",
+            "steam": "",
+            "steam_app": "",
+            "blender": "",
+            "title<.*youtube.*>": "",
+            "title<.*github.*>": ""
+        },
+        "persistent-workspaces": {
+             "*": 5
+        }       
+    },
+
+    // Hyprland Window
+    "hyprland/window": {
+        "format": "{class}"
+    },
+
+    "custom/quicklink2": {
+        "format": "",
+        "on-click": "~/bin/browser",
+        "tooltip-format": "Open the browser"
+    },
+
+    "custom/quicklink3": {
+        "format": " ",
+        "on-click": "~/bin/filemanager",
+        "tooltip-format": "Open the filemanager"
+    },
+
+    "custom/quicklinkempty": {
+    }, 
+
+    "group/quicklinks": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/quicklink1",
+            "custom/quicklink2",
+            "custom/quicklink3",
+            "custom/quicklinkempty"
+        ]
+    },
+
+    // Rofi Application Launcher
+    "custom/appmenu": {
+        "format": "",
+        "tooltip-format": "Left: Open the application launcher\nRight: Show all keybindings",
+        "on-click": "~/.config/rofi/launcher.sh",
+        "tooltip": false
+    },
+    
+    // Power Menu
+    "custom/exit": {
+        "format": "",
+        "tooltip-format": "Powermenu",
+        "on-click": "~/.config/rofi/powermenu.sh",
+        "tooltip": false
+    },
+
+    // Keyboard State
+    "keyboard-state": {
+        "numlock": true,
+        "capslock": true,
+        "format": "{name} {icon}",
+        "format-icons": {
+            "locked": "",
+            "unlocked": ""
+        }
+    },
+
+    // System tray
+    "tray": {
+        // "icon-size": 21,
+        "spacing": 10
+    },
+
+    // Clock
+    "clock": {
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": "{:%Y-%m-%d}"
+    },
+
+    // System
+    "custom/system": {
+        "format": "",
+        "tooltip": false
+    },
+
+    // CPU
+    "cpu": {
+        "format": "/ C {usage}% ",
+        "on-click": "alacritty -e htop"
+    },
+
+    // Memory
+    "memory": {
+        "format": "/ M {}% ",
+        "on-click": "alacritty -e htop"
+    },
+
+    // Harddisc space used
+    "disk": {
+        "interval": 30,
+        "format": "D {percentage_used}% ",
+        "path": "/",
+        "on-click": "alacritty -e htop"
+    }, 
+
+    "hyprland/language": {
+        "format": "/ K {short}"
+    },
+
+    // Group Hardware
+    "group/hardware": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 300,
+            "children-class": "not-memory",
+            "transition-left-to-right": false
+        },        
+        "modules": [
+            "custom/system",
+            "disk",
+            "cpu",
+            "memory",
+            "hyprland/language"
+        ]
+    },
+    
+   // Network
+    "network": {
+        "format": "{ifname}",
+        "format-wifi": " ",
+        "format-ethernet": "  {ipaddr}",
+        "format-disconnected": " ",
+        "tooltip-format": " {ifname} via {gwaddri}",
+        "tooltip-format-wifi": "   {essid} ({signalStrength}%)",
+        "tooltip-format-ethernet": "  {ifname} ({ipaddr}/{cidr})",
+        "tooltip-format-disconnected": "",
+        "max-length": 50,
+        "on-click": "  {signalStrength}%"
+    },
+
+    // Battery
+    "battery": {
+        "states": {
+            // "good": 95,
+            "warning": 30,
+            "critical": 10
+        },
+        "format": "{icon}",
+        "format-charging": "  {capacity}%",
+        "format-plugged": "  {capacity}%",
+        "format-alt": "{icon}  {capacity}%",
+        "format-icons": [" ", " ", " ", " ", " "]
+    },
+
+    // Pulseaudio
+    "pulseaudio": {
+        // "scroll-step": 1, // %, can be a float
+        "format": "{icon}  {volume}%",
+        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format-bluetooth-muted": " {icon} {format_source}",
+        "format-muted": " {format_source}",
+        "format-source": "{volume}% ",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", " ", " "]
+        },
+        "on-click": "pavucontrol"
+    },
+
+    "custom/media": { 
+        "exec": "~/bin/media --length 40 --json",
+        "return-type": "json",
+        "format": "{}",
+        "max-length": 64,
+        "interval": 1,
+        "on-click": "~/bin/media --command play-pause"
+    },
+
+    "custom/do-not-disturb": {
+      "exec": "~/bin/dnd-status",
+      "return-type": "json",
+      "format": "{icon}",
+      "format-icons": {
+        "true": " ",
+        "false": ""
+      },
+      "interval": "once",
+      "signal": 1
+    },
+
+    // Bluetooth
+    "bluetooth": {
+        "format":  "",
+        "interval": 30,
+        "on-click": "~/.config/rofi/applets/bin/bluetooth.sh &",
+        "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}"
+    },
+
+    // Other
+    "user": {
+        "format": "{user}",
+        "interval": 60,
+        "icon": false,
+    },
+
+    // Idle Inhibator
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "tooltip": true,
+        "format-icons":{
+            "activated": "",
+            "deactivated": ""
+        },
+        "on-click-right": "hyprlock"        
+    }
+}

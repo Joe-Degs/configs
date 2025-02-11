@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Configuration
+CONFIG_FILE="$HOME/.config/hypr/conf/lockscreen.conf"
+WALLPAPER_DIR="$HOME/Pictures/wallpapers"
+
+# Get the current wallpaper path from the config
+CURRENT_WALL=$(grep -oP '(?<=path = ).*' "$CONFIG_FILE")
+
+# Find a random wallpaper that's not the current one
+NEW_WALL=$(find "$WALLPAPER_DIR" -type f ! -name "$(basename "$CURRENT_WALL")" | shuf -n 1)
+
+# Update the config file with the new wallpaper
+sed -i "s|$CURRENT_WALL|$NEW_WALL|" "$CONFIG_FILE"
+
+# Reload the wallpaper and lock the screen
+hyprctl hyprpaper reload "$NEW_WALL"
+hyprlock --immediate

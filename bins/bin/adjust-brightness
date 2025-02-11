@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Default increment value (in percentage)
+INCREMENT=5
+
+# Function to show usage
+usage() {
+    echo "Usage: $0 [+|-]"
+    echo "  +    Increase brightness by $INCREMENT%"
+    echo "  -    Decrease brightness by $INCREMENT%"
+    exit 1
+}
+
+# Check if an argument is provided
+if [ $# -ne 1 ]; then
+    usage
+fi
+
+# Get current brightness and max brightness
+current=$(brightnessctl get)
+max=$(brightnessctl max)
+
+# Calculate current brightness percentage
+current_percent=$(( (current * 100) / max ))
+
+# Calculate new brightness percentage based on argument
+case $1 in
+    "+")
+        new_percent=$(( current_percent + INCREMENT ))
+        ;;
+    "-")
+        new_percent=$(( current_percent - INCREMENT ))
+        ;;
+    *)
+        usage
+        ;;
+esac
+
+# Ensure new percentage is within bounds (1-100)
+if [ $new_percent -lt 1 ]; then
+    new_percent=1
+elif [ $new_percent -gt 100 ]; then
+    new_percent=100
+fi
+
+# Set new brightness
+brightnessctl set "${new_percent}%"

@@ -1,0 +1,273 @@
+#!/bin/bash
+
+# Configuration module
+CONFIG_MODULE() {
+    # Default configuration values
+    declare -g FORMAT="{artist} - {title}"
+    declare -g MAX_LENGTH=40
+    declare -g SHOW_PLAYER_NAME=false
+    declare -g TRUNCATION_STYLE="end"
+    declare -g TRUNCATION_SYMBOL="..."
+    declare -g OUTPUT_FORMAT="text"
+    
+    # Player-specific configurations using associative arrays
+    declare -gA PLAYER_ICONS=(
+        ["spotify"]=""
+        ["youtube"]=""
+        ["chrome"]="" # or edge
+        ["firefox"]=""
+        ["default"]=""
+    )
+    
+    declare -gA STATUS_SYMBOLS=(
+        ["Playing"]=""
+        ["Paused"]=""
+        ["Stopped"]=""
+    )
+}
+
+# Help module
+HELP_MODULE() {
+    echo "Usage: $0 [OPTIONS]"
+    echo "Options:"
+    echo "  -f, --format FORMAT     Custom format string (default: {artist} - {title})"
+    echo "  -l, --length NUMBER     Maximum length of output (default: 40)"
+    echo "  -s, --show-player       Show player name in output"
+    echo "  -t, --truncate STYLE    Truncation style: end, middle, start (default: end)"
+    echo "  -c, --command CMD       Senspotifyd command: play, pause, next, prev, stop"
+    echo "  -j, --json             Output in JSON format (for Waybar)"
+    echo "  -h, --help             Show this help message"
+}
+
+# Text processing module
+TEXT_MODULE() {
+    local text="$1"
+    local max_length="$2"
+    local style="$3"
+    
+    if [ ${#text} -le "$max_length" ]; then
+        echo "$text"
+        return
+    fi
+
+    local symbol_length=${#TRUNCATION_SYMBOL}
+    local cut_length=$((max_length - symbol_length))
+
+    case "$style" in
+        "start")
+            echo "${TRUNCATION_SYMBOL}${text:(-$cut_length)}"
+            ;;
+        "middle")
+            local start_length=$((cut_length / 2))
+            local end_length=$((cut_length - start_length))
+            echo "${text:0:$start_length}${TRUNCATION_SYMBOL}${text:(-$end_length)}"
+            ;;
+        *)  # "end" or default
+            echo "${text:0:$cut_length}${TRUNCATION_SYMBOL}"
+            ;;
+    esac
+}
+
+# Player detection module
+PLAYER_DETECTION_MODULE() {
+    local players
+    players=$(playerctl -l 2>/dev/null) || return 1
+    
+    # Initialize variables
+    declare -g current_player=""
+    declare -a active_players=()
+    
+    while IFS= read -r player; do
+        local status
+        status=$(playerctl -p "$player" status 2>/dev/null) || continue
+        
+        [ "$status" = "Stopped" ] && continue
+        
+        active_players+=("$player")
+        if [ "$status" = "Playing" ]; then
+            current_player="$player"
+            return 0
+        fi
+    done <<< "$players"
+    
+    # If no playing player found, use first active player
+    if [ ${#active_players[@]} -gt 0 ]; then
+        current_player="${active_players[0]}"
+        return 0
+    fi
+    
+    return 1
+}
+
+# Player identification module
+GET_PLAYER_TYPE() {
+    local player="$1"
+    
+    if [[ $player == *"chromium"* ]] || [[ $player == *"chrome"* ]] || [[ $player == *"edge"* ]]; then
+        local title
+        title=$(playerctl -p "$player" metadata title 2>/dev/null)
+        if [[ $title == *"YouTube"* ]]; then
+            echo "youtube"
+            return
+        fi
+        echo "chrome"
+        return
+    fi
+    
+    case "$player" in
+        *"spotify"*)
+            echo "spotify"
+            ;;
+        *"firefox"*)
+            echo "firefox"
+            ;;
+        *)
+            echo "default"
+            ;;
+    esac
+}
+
+# Player control module
+PLAYER_MODULE() {
+    local player="$1"
+    local command="$2"
+    
+    case "$command" in
+        "play"|"pause"|"play-pause"|"next"|"previous"|"stop")
+            playerctl -p "$player" "$command" 2>/dev/null
+            ;;
+        *)
+            echo "Unknown command: $command" >&2
+            return 1
+            ;;
+    esac
+}
+
+# Metadata processing module
+METADATA_MODULE() {
+    local player="$1"
+    local format="$2"
+    
+    local status
+    status=$(playerctl -p "$player" status 2>/dev/null) || {
+        if [ "$OUTPUT_FORMAT" = "json" ]; then
+            echo "{\"text\": \"\", \"tooltip\": \"\", \"class\": [\"stopped\"], \"status\": \"Stopped\"}"
+        else
+            echo ""
+        fi
+        return 0
+    }
+
+    # Get metadata with proper error handling
+    local artist title album
+    artist=$(playerctl -p "$player" metadata artist 2>/dev/null || echo "")
+    title=$(playerctl -p "$player" metadata title 2>/dev/null || echo "")
+    album=$(playerctl -p "$player" metadata album 2>/dev/null || echo "")
+    
+    # Get player type and icon
+    local player_type
+    player_type=$(GET_PLAYER_TYPE "$player")
+    local player_icon="${PLAYER_ICONS[$player_type]:-${PLAYER_ICONS[default]}}"
+    
+    # Format output
+    local output
+    if [ -n "$artist" ] && [ -n "$title" ]; then
+        output="$format"
+        output="${output//\{artist\}/$artist}"
+        output="${output//\{title\}/$title}"
+        output="${output//\{album\}/$album}"
+    else
+        output="$title"
+    fi
+    
+    local status_symbol="${STATUS_SYMBOLS[$status]:-${STATUS_SYMBOLS[Stopped]}}"
+    local full_output="$player_icon $status_symbol $output"
+    
+    local truncated_output
+    truncated_output=$(TEXT_MODULE "$full_output" "$MAX_LENGTH" "$TRUNCATION_STYLE")
+    
+    if [ "$OUTPUT_FORMAT" = "json" ]; then
+        local escaped_full="${full_output//\"/\\\"}"
+        local escaped_truncated="${truncated_output//\"/\\\"}"
+        
+        # Clean status name (lowercase)
+        local css_status="${status,,}"
+        
+        # Get clean player type
+        local css_player="$player_type"
+        
+        # Create JSON array of classes
+        local css_classes="[\"$css_player\", \"$css_status\"]"
+        
+        echo "{\"text\": \"$escaped_truncated\", \"tooltip\": \"$escaped_full\", \"class\": $css_classes, \"status\": \"$status\"}"
+    else
+        echo "$truncated_output"
+    fi
+}
+
+# Argument parsing module
+ARGS_MODULE() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -f|--format)
+                FORMAT="$2"
+                shift 2
+                ;;
+            -l|--length)
+                MAX_LENGTH="$2"
+                shift 2
+                ;;
+            -s|--show-player)
+                SHOW_PLAYER_NAME=true
+                shift
+                ;;
+            -t|--truncate)
+                TRUNCATION_STYLE="$2"
+                shift 2
+                ;;
+            -j|--json)
+                OUTPUT_FORMAT="json"
+                shift
+                ;;
+            -c|--command)
+                if [ -n "$current_player" ]; then
+                    PLAYER_MODULE "$current_player" "$2"
+                fi
+                exit 0
+                ;;
+            -h|--help)
+                HELP_MODULE
+                exit 0
+                ;;
+            *)
+                echo "Unknown option: $1" >&2
+                HELP_MODULE
+                exit 1
+                ;;
+        esac
+    done
+}
+
+# Main execution
+main() {
+    # Initialize configuration
+    CONFIG_MODULE
+    
+    # Detect active player first
+    if ! PLAYER_DETECTION_MODULE; then
+        if [ "$OUTPUT_FORMAT" = "json" ]; then
+            echo "{\"text\": \"\", \"tooltip\": \"\", \"class\": \"stopped\"}"
+        else
+            echo ""
+        fi
+        exit 0
+    fi
+    
+    # Parse arguments
+    ARGS_MODULE "$@"
+    
+    # Process and output metadata
+    METADATA_MODULE "$current_player" "$FORMAT"
+}
+
+main "$@"

@@ -1,0 +1,47 @@
+configuration {
+    hover-select: true;
+    me-select-entry: "";
+    me-accept-entry: [MousePrimary];
+    hide-scrollbar: true;
+    click-to-exit: true;    /* Click outside to close */
+}
+
+* {
+    bg: #1A1A1A;
+    bg-light: #2A2A2A;
+    text-color: #E0E0E0;
+    text-color-dim: #CCCCCC;
+    selected-bg: #404040;
+    
+    background-color: @bg;
+    font: "Iosevka Nerd Font 12";
+}
+
+window {
+    location: pointer;
+    anchor: north;
+    y-offset: 30px;
+    background-color: @bg;
+    border-radius: 15px;
+    width: 200px;
+}
+
+listview {
+    padding: 4px;
+    spacing: 2px;
+    dynamic: true;
+    lines: 8;
+    columns: 1;
+    background-color: @bg;
+}
+
+element {
+    padding: 4px 8px;
+    background-color: @bg-light;
+    border-radius: 15px;
+}
+
+element selected {
+    background-color: @selected-bg;
+    text-color: @text-color;
+}

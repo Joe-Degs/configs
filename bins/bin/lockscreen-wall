@@ -1,0 +1,25 @@
+#!/bin/bash
+
+main() {
+    WALLPAPER_DIR="$HOME/Pictures/wallpapers"
+    CURRENT_WALL=$(hyprctl hyprpaper listloaded)
+
+    WALLPAPER=$(find "$WALLPAPER_DIR" -type f ! -name "$(basename "$CURRENT_WALL")" | shuf -n 1)
+
+  echo "# BACKGROUND
+background {
+    monitor =
+    blur_passes = 0
+    contrast = 1
+    brightness = 0.5
+    vibrancy = 0.2
+    vibrancy_darkness = 0.2
+    path = $WALLPAPER   # supports png, jpg, webp (no animations, though)
+  }
+" >~/.config/hypr/conf/lockscreen.conf
+
+    # sleep 5m
+    # main
+}
+
+main
