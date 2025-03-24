@@ -26,7 +26,7 @@ vim.opt.foldlevelstart = 99
 -- keep more context on screen while scrolling
 vim.opt.scrolloff = 2
 -- never show me line breaks if they're not there
-vim.opt.wrap = false
+vim.opt.wrap = true
 -- always draw sign column. prevents buffer moving when adding/deleting sign
 vim.opt.signcolumn = 'yes'
 -- sweet sweet relative line numbers

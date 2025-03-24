@@ -8,6 +8,18 @@ elif [ -f /etc/bash.bashrc ]; then
   source /etc/bash.bashrc
 fi
 
+# export PS1='\u@\h:\[\e[01;32m\]\w\[\e[0m\]\$ '
+export CLICOLOR=1
+
+
+if [ -f "$HOME/.aliases" ]; then
+  source $HOME/.aliases
+fi
+
+if [ -f "$HOME/.profile" ]; then
+  source $HOME/.profile
+fi
+
 export PATH=$PATH:$HOME/.local/bin
 
 # History management

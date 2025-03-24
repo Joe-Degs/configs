@@ -1,0 +1,1 @@
+alias weave='/home/joe/go/bin/CodeWeaver -ignore="\.git.*,.+\.exe,codebase.md,excluded_paths.txt,go.mod,go.sum,\.zig-cache,zig-out,build.zig*"'
