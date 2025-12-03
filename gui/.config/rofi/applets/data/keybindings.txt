@@ -1,0 +1,60 @@
+# Window Management
+SUPER + Return          │ Launch terminal (Ghostty)
+SUPER + SHIFT + Return  │ Launch floating terminal (Alacritty)
+SUPER + Q               │ Close active window
+SUPER + F               │ Toggle fullscreen
+SUPER + T               │ Toggle floating mode
+SUPER + P               │ Toggle pseudo-tiling
+SUPER + S               │ Toggle split direction
+SUPER + CTRL + M        │ Exit Hyprland
+
+# Applications
+SUPER + Space           │ Application launcher (Rofi)
+SUPER + B               │ Open browser (Firefox)
+SUPER + E               │ Open file manager
+SUPER + /               │ Show keybindings (this menu)
+
+# Focus Navigation (Vim-style)
+SUPER + H               │ Move focus left
+SUPER + J               │ Move focus down
+SUPER + K               │ Move focus up
+SUPER + L               │ Move focus right
+ALT + Tab               │ Cycle through windows
+
+# Workspaces
+SUPER + 1-9             │ Switch to workspace 1-9
+SUPER + 0               │ Switch to workspace 10
+SUPER + SHIFT + 1-9     │ Move window to workspace 1-9
+SUPER + SHIFT + 0       │ Move window to workspace 10
+SUPER + Mouse Scroll    │ Scroll through workspaces
+
+# Mouse Actions
+SUPER + Left Click      │ Move window (drag)
+SUPER + Right Click     │ Resize window (drag)
+
+# Screenshots & Recording
+Print                   │ Screenshot menu
+SHIFT + Print           │ Full screen capture to clipboard
+
+# Audio Controls
+Volume Up Key           │ Increase volume 5%
+Volume Down Key         │ Decrease volume 5%
+Mic Mute Key            │ Toggle microphone mute
+Play/Pause Key          │ Toggle media playback
+Previous Track Key      │ Previous track
+Next Track Key          │ Next track
+
+# Brightness
+Brightness Up Key       │ Increase brightness
+Brightness Down Key     │ Decrease brightness
+
+# Power & System
+SUPER + SHIFT + L       │ Lock screen
+Power Button            │ Power menu (shutdown/reboot/etc)
+Lid Close               │ Suspend and lock
+
+# Utilities
+SUPER + Z               │ Toggle Do Not Disturb
+SUPER + SHIFT + B       │ Reload Waybar
+SUPER + SHIFT + W       │ Reload wallpaper
+SUPER + CTRL + W        │ Reload Hyprpaper

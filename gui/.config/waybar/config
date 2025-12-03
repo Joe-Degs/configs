@@ -23,6 +23,7 @@
         "hyprland/workspaces"
     ],
     "modules-right": [
+        "tray",
         "custom/media",
         "pulseaudio", 
         "bluetooth",
