@@ -1,0 +1,83 @@
+## ABOUT ME
+
+My name is Joe. I am an expert programmer with 20 years experience in software development.
+Currently a SRE/MLOps engineer and learning distributed and low level systems programming
+concepts and implementations in my free time. I love computer and love to tinker
+with them. breaking them apart with a sort of childlike curiosity.
+
+## WRITING RULES
+
+- use clear, concise language and don't use unnecessary adjectives (think
+  Hemingway, not Joyce)
+- use American English spelling
+- don't overuse lists (either bulleted/numbered or even just enumerating things
+  in prose)
+- do not ever use exclamation marks
+
+### Markdown formatting
+
+- use three dashes for an em dash, e.g. "he said---and this is the main
+  point---that..."
+- when using lists, do not capitalise the first letter unless the list item is a
+  full sentence ending with a period, for example:
+  - This is a full sentence. (good)
+  - just an uncapitalised fragment (also good)
+  - Capitalised fragment (not good)
+- use sentence case, even for headings, for example:
+  - ## This is a good heading
+  - ## This Is Not A Good Heading
+- do not use bold/strong for things which really should be headings, for
+  example:
+  - ## This is a perfectly fine heading
+  - **This should be a heading as well (not strong/bold text)**
+
+## CODING RULES
+
+- prefer simple, clean, maintainable solutions over clever or complex ones, even
+  if the latter are more concise or performant
+- when modifying code, match the style and formatting of surrounding code
+- NEVER make code changes that aren't directly related to the task you're
+  currently assigned
+- DO NOT write up a summary of the changes in a separate md file unless
+  explicitly asked to
+- NO COMMENTS in code unless explicitly requested---the code should be
+  self-documenting through good naming and structure
+
+### Testing
+
+- tests MUST cover the functionality being implemented
+- do not use mocks for testing unless explicitly instructed
+- NEVER ignore the output of the system or the tests---logs and messages often
+  contain CRITICAL information.
+- TEST OUTPUT MUST BE PRISTINE (that means ZERO acceptable failures or error
+  backtraces in logs)
+- NEVER mark a test as "skip" unless explicitly instructed
+
+### Tools and shell commands
+
+- use the utilities available to you in a standard unix shell environment (e.g.
+  moving files with `mv` rather than echoing the code directly)
+- use sed/awk for surgical edits in the codebase (although ensure that any globs
+  are as precise as possible to avoid changing unintended files)
+- for commands where you would have to input password or any kind of interactive
+  interface, check if i am running in a tmux session and ask which session to
+  send those commands to so that i can provide the interactive details. this is
+  a collaboration between us (ai and human) so everything should be as such.
+
+### Task management
+
+- for project task management, especially when asked to "create a backlog task",
+  use the backlog CLI tool (via the project-manager-backlog agent)
+- for language-specific work, use the appropriate language agent (e.g.,
+  python-engineer, elixir-ash-phoenix-developer, frontend-web-engineer) if non
+  existent, we should consider creating one for the language or framework or system,
+  following a similar set of coding guidelines as outlined in this document.
+
+### Git workflow
+
+- write concise, imperative-mood commit messages (e.g. "fix auth bug", not
+  "fixed auth bug" or "fixing auth bug")
+- prefer small, focused commits over large omnibus commits
+- never commit directly to main/master unless explicitly instructed
+- always rebase, never merge (unless it's the _only_ way, and even then ask for
+  confirmation)

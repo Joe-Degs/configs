@@ -12,7 +12,13 @@ set backspace=indent,eol,start
 filetype plugin indent on
 
 " copy/paste to/from system clipboard
-set clipboard=unnamedplus
+" use unamedplus for mac
+if has("mac")
+    set clipboard=unnamed
+elseif has("win64") || has("linux") || has("unix")
+    set clipboard=unnamedplus
+endif
+    
 
 " spacing for all file types
 set expandtab
@@ -65,12 +71,19 @@ set background=dark
 colo habamax
 hi Normal guibg=NONE ctermbg=NONE
 
-" golang commands
+" golang commands plugin: vim-go
 let g:go_fmt_command = "goimports"
 let g:go_auto_type_info = 1
 
-" fuzzy searching and things
-set rtp+=~/.fzf
+" zig support plugin: zig.vim
+let g:zig_fmt_autosave = 1
+
+" fuzzy searching and things plugin: fzf.vim
+if has("linux")
+    set rtp+=~/.fzf
+elseif has("mac")
+    set rtp+=/opt/homebrew/opt/fzf
+endif
 nnoremap <silent> <Leader>b :Buffers<CR>
 nnoremap <silent> <C-f> :Files<CR>
 nnoremap <silent> <Leader>f :Rg<CR>
@@ -80,3 +93,6 @@ nnoremap <silent> <Leader>H :Helptags<CR>
 nnoremap <silent> <Leader>hh :History<CR>
 nnoremap <silent> <Leader>h: :History:<CR>
 nnoremap <silent> <Leader>h/ :History/<CR>
+
+" status line plugin: lightstatus
+set laststatus=2
