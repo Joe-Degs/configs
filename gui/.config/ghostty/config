@@ -4,7 +4,7 @@ auto-update-channel = tip
 shell-integration-features = no-cursor
 
 # fonts
-font-family = "Iosevka Extended"
+font-family = "MesloLGS Nerd Font Mono"
 cursor-style = block
 cursor-style-blink = false
 

@@ -1,3 +1,5 @@
 **/sysapps/bin
 **/themes
 nvim/lazy-lock.json
+install.log
+**/*.bak

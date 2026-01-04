@@ -1,11 +1,12 @@
-/* Base colors for a minimal black theme */
-@define-color backgroundlight #2A2A2A;
-@define-color workspacesbackground1 #2A2A2A;
-@define-color workspacesbackground2 #404040;
-@define-color textcolor1 #E0E0E0;
-@define-color textcolor2 #CCCCCC;
-@define-color textcolor3 #A0A0A0;
-@define-color iconcolor #B0B0B0;
+/* Twilight theme colors */
+@define-color backgroundlight #1a1a1a;
+@define-color workspacesbackground1 #1a1a1a;
+@define-color workspacesbackground2 #303030;
+@define-color textcolor1 #FEFFD3;
+@define-color textcolor2 #C2A86C;
+@define-color textcolor3 #778284;
+@define-color iconcolor #AFB979;
+@define-color accent #C2A86C;
 
 
 * {

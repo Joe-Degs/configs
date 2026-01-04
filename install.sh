@@ -303,7 +303,7 @@ install_desktop() {
     log_info "Installing desktop environment..."
     echo ""
 
-    local stow_packages=("gui" "editor" "shell" "bins")
+    local stow_packages=("gui" "editor" "shell" "bins" "claude")
     local all_packages=("${BASE_PACKAGES[@]}" "${DESKTOP_PACKAGES[@]}")
 
     install_yay
@@ -325,7 +325,7 @@ install_server() {
     log_info "Installing server environment..."
     echo ""
 
-    local stow_packages=("editor" "shell" "bins")
+    local stow_packages=("editor" "shell" "bins" "claude")
 
     install_yay
     install_pacman_packages "${BASE_PACKAGES[@]}"
