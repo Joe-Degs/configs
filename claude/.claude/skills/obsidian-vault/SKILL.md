@@ -7,7 +7,10 @@ description: |
   notes ("note to self", "capture note"), lists ("add to reading list", "add to list"),
   savings ("saved", "deposited", "savings fund"), reviews ("how was my week", "monthly review"),
   bored/stuck ("bored", "stuck", "what should I do", "what now", "need something to do"),
-  completion ("done with", "finished reading", "read that article", "watched that", "listened to").
+  completion ("done with", "finished reading", "read that article", "watched that", "listened to"),
+  syncing ("sync vault", "sync obsidian", "sync configs", "push my changes"),
+  planning ("plan", "deep plan", "help me plan", "let's plan"),
+  context ("pull context", "get context", "what do I have on", "find my notes on").
 ---
 
 # Obsidian vault
@@ -30,6 +33,12 @@ Routes natural language capture requests to the appropriate slash command.
 | "I'm bored" / "what should I do" | `/bored` | → /bored |
 | "finished reading that trust paper" | `/done` | → /done #reading trust |
 | "done with the oxide podcast" | `/done` | → /done #podcast oxide |
+| "sync my vault" / "push obsidian" | `/sync` | → /sync obsidian |
+| "sync configs" / "sync dotfiles" | `/sync` | → /sync configs |
+| "help me plan kubernetes setup" | `/deepplan` | → /deepplan kubernetes setup |
+| "let's plan my trip to ireland" | `/deepplan` | → /deepplan ireland trip |
+| "what do I have on emulator" | `/pull-context` | → /pull-context emulator |
+| "find my notes on distributed systems" | `/pull-context` | → /pull-context distributed systems |
 
 ## How to route
 
@@ -51,6 +60,9 @@ All commands are in `~/.claude/commands/`:
 - `month-review.md` - monthly review
 - `bored.md` - combat drift with suggestions
 - `done.md` - mark list items complete
+- `sync.md` - sync vault or configs to GitHub
+- `deepplan.md` - deep planning with research
+- `pull-context.md` - pull vault context for a topic
 
 ## Scripts (for command internals)
 
@@ -58,6 +70,7 @@ Commands use these scripts - do not read, just execute:
 - `{baseDir}/scripts/add-entry.sh <section> "<entry>"` - insert entries
 - `{baseDir}/scripts/inbox-path.sh` - get current inbox path
 - `{baseDir}/scripts/get-month-data.sh YYYY-MM` - extract month data
+- `{baseDir}/scripts/sync-repo.sh <path> [status|commit|pull|push]` - git sync with safety
 
 ## Data formats
 
