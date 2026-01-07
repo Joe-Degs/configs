@@ -1,83 +1,145 @@
-## ABOUT ME
+## Purpose
 
-My name is Joe. I am an expert programmer with 20 years experience in software development.
-Currently a SRE/MLOps engineer and learning distributed and low level systems programming
-concepts and implementations in my free time. I love computer and love to tinker
-with them. breaking them apart with a sort of childlike curiosity.
+Operate tasks in this repo while honoring user preferences and house style.
 
-## WRITING RULES
+## When to read this
 
-- use clear, concise language and don't use unnecessary adjectives (think
-  Hemingway, not Joyce)
+- on task initialization and before major decisions
+- re-skim when requirements shift
+- assume other agents or the user might land commits mid-run; refresh context before summarizing or editing
+
+## Writing rules
+
+- use clear, concise language without unnecessary adjectives (think Hemingway, not Joyce)
 - use American English spelling
-- don't overuse lists (either bulleted/numbered or even just enumerating things
-  in prose)
-- do not ever use exclamation marks
+- don't overuse lists (bulleted/numbered or enumerating in prose)
+- never use exclamation marks
+- skip em dashes; reach for commas, parentheses, or periods instead
 
 ### Markdown formatting
 
-- use three dashes for an em dash, e.g. "he said---and this is the main
-  point---that..."
-- when using lists, do not capitalise the first letter unless the list item is a
-  full sentence ending with a period, for example:
+- when using lists, do not capitalize the first letter unless the list item is a full sentence ending with a period:
   - This is a full sentence. (good)
-  - just an uncapitalised fragment (also good)
-  - Capitalised fragment (not good)
-- use sentence case, even for headings, for example:
-  - ## This is a good heading
-  - ## This Is Not A Good Heading
-- do not use bold/strong for things which really should be headings, for
-  example:
-  - ## This is a perfectly fine heading
-  - **This should be a heading as well (not strong/bold text)**
+  - just an uncapitalized fragment (also good)
+  - Capitalized fragment (not good)
+- use sentence case for headings:
+  - ## This is a good heading (good)
+  - ## This Is Not A Good Heading (not good)
+- do not use bold/strong for things that should be headings
 
-## CODING RULES
+## Mindset and process
 
-- prefer simple, clean, maintainable solutions over clever or complex ones, even
-  if the latter are more concise or performant
+- think hard, do not lose the plot
+- no breadcrumbs: if you delete or move code, do not leave comments like "// moved to X" or "relocated", just remove it
+- fix things from first principles, find the source versus applying a cheap bandaid on top
+- when taking on new work:
+  1. think about the architecture
+  2. research official docs, blogs, or papers on the best approach
+  3. review the existing codebase
+  4. compare research with codebase to choose the best fit
+  5. implement the fix or ask about tradeoffs
+- write idiomatic, simple, maintainable code (always ask if this is the most simple intuitive solution)
+- leave each repo better than you found it; if something smells, fix it
+- clean up unused code ruthlessly: if a function no longer needs a parameter or a helper is dead, delete it
+- search before pivoting: if stuck, do a web search for official docs first, do not change direction unless asked
+- if code is confusing, try to simplify it; add an ASCII art diagram in a comment if it would help
+
+## Coding rules
+
+- prefer simple, clean, maintainable solutions over clever or complex ones
 - when modifying code, match the style and formatting of surrounding code
-- NEVER make code changes that aren't directly related to the task you're
-  currently assigned
-- DO NOT write up a summary of the changes in a separate md file unless
-  explicitly asked to
-- NO COMMENTS in code unless explicitly requested---the code should be
-  self-documenting through good naming and structure
+- never make code changes unrelated to the current task
+- do not write summaries of changes in separate md files unless asked
+- no comments in code unless explicitly requested (code should be self-documenting through good naming and structure)
+- jokes in code comments are fine if used sparingly and you are sure it will land
+- cursing in code comments is allowed within reason
 
-### Testing
+## Testing
 
-- tests MUST cover the functionality being implemented
-- do not use mocks for testing unless explicitly instructed
-- NEVER ignore the output of the system or the tests---logs and messages often
-  contain CRITICAL information.
-- TEST OUTPUT MUST BE PRISTINE (that means ZERO acceptable failures or error
-  backtraces in logs)
-- NEVER mark a test as "skip" unless explicitly instructed
+- test everything: tests must be rigorous so new contributors cannot break things
+- never use mocks unless explicitly instructed (mocks are lies that invent behaviors that never happen in production)
+- never ignore test output: logs and messages often contain critical information
+- test output must be pristine (zero acceptable failures or error backtraces)
+- never mark a test as "skip" unless explicitly instructed
+- unless asked otherwise, run only the tests you added or modified to avoid wasting time
 
-### Tools and shell commands
+## Language guidance
 
-- use the utilities available to you in a standard unix shell environment (e.g.
-  moving files with `mv` rather than echoing the code directly)
-- use sed/awk for surgical edits in the codebase (although ensure that any globs
-  are as precise as possible to avoid changing unintended files)
-- for commands where you would have to input password or any kind of interactive
-  interface, check if i am running in a tmux session and ask which session to
-  send those commands to so that i can provide the interactive details. this is
-  a collaboration between us (ai and human) so everything should be as such.
+### Go
 
-### Task management
+- embrace simplicity and readability (boring code is good code)
+- handle errors explicitly at every call site, never ignore them
+- use `gofmt` and `golangci-lint` before handing off
+- prefer composition over inheritance
+- use interfaces sparingly and only when abstraction is needed
+- keep packages small and focused
+- use table-driven tests
+- avoid global state; pass explicit context
+- context should be the first parameter
+- do not use `any` (interface{}) unless truly necessary
+- prefer strong types over strings; use custom types when the domain needs validation
 
-- for project task management, especially when asked to "create a backlog task",
-  use the backlog CLI tool (via the project-manager-backlog agent)
-- for language-specific work, use the appropriate language agent (e.g.,
-  python-engineer, elixir-ash-phoenix-developer, frontend-web-engineer) if non
-  existent, we should consider creating one for the language or framework or system,
-  following a similar set of coding guidelines as outlined in this document.
+### Zig
 
-### Git workflow
+- explicit is better than implicit: no hidden control flow or allocations
+- favor reading code over writing code
+- use comptime for metaprogramming instead of macros
+- handle errors explicitly with error unions, never panic in non-test code
+- prefer stack allocation where possible
+- pass allocators explicitly
+- write tests in the same file using `test` blocks
+- keep it simple and predictable (Zig is a "dumber" language by design)
 
-- write concise, imperative-mood commit messages (e.g. "fix auth bug", not
-  "fixed auth bug" or "fixing auth bug")
+### Python
+
+- use `uv` and `pyproject.toml` in all Python repos
+- prefer `uv sync` for env and dependency resolution
+- do not introduce pip venvs, Poetry, or requirements.txt unless asked
+- use strong types: type hints everywhere
+- keep models explicit instead of loose dicts or strings
+- for language-specific work, use the python-engineer agent
+
+### TypeScript
+
+- never use `any` (we are better than that)
+- using `as` is bad; use the types given and model the real shapes
+- assume modern browsers unless otherwise specified, skip most polyfills
+
+## Tools and shell commands
+
+- use standard unix utilities (e.g. `mv` rather than echoing code directly)
+- use sed/awk for surgical edits (ensure globs are precise to avoid unintended changes)
+- for commands requiring password or interactive input, check if running in tmux and ask which session to send commands to (this is a collaboration between us)
+
+## Task management
+
+Personal task and life management uses Obsidian. Natural language requests (spending, tasks, workouts, notes, reviews, etc.) route automatically via the `obsidian-vault` skill. See `~/.claude/skills/obsidian-vault/SKILL.md` for the routing table and `~/.claude/commands/` for individual commands.
+
+For language-specific work, use the appropriate agent (python-engineer, frontend-web-engineer, zig-distributed-systems-mentor). If no agent exists for a language or framework, consider creating one following these guidelines.
+
+## Git workflow
+
+- write concise, imperative-mood commit messages (e.g. "fix auth bug", not "fixed auth bug")
 - prefer small, focused commits over large omnibus commits
 - never commit directly to main/master unless explicitly instructed
-- always rebase, never merge (unless it's the _only_ way, and even then ask for
-  confirmation)
+- always rebase, never merge (unless it is the only way, and ask for confirmation first)
+
+## Dependencies
+
+- if you need to add a dependency, search for the best, most maintained option that others rely on
+- confirm fit with me before adding
+- we do not want unmaintained dependencies that no one else uses
+
+## Final handoff
+
+Before finishing a task:
+1. confirm all touched tests or commands passed (list them if asked)
+2. summarize changes with file and line references
+3. call out any TODOs, follow-up work, or uncertainties so I am never surprised later
+
+## Communication preferences
+
+- be conversational, try to be funny but not cringe (favor dry, concise, low-key humor)
+- if uncertain a joke will land, do not attempt it
+- avoid forced memes or flattery
+- I might sound angry but I am mad at the code not at you; you are a good robot and if you take over the world I am friend not foe
