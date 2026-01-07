@@ -1,11 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "cleanupPeriodDays": 365,
-  "allowedTools": [
-    "Read(~/.claude/skills/**)",
-    "Read(~/.claude/commands/**)",
-    "Bash(bash ~/.claude/skills/**/scripts/*)"
-  ],
   "env": {
     "DISABLE_TELEMETRY": "1"
   },
@@ -20,7 +15,15 @@
     "frontend-design@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
     "learning-output-style@claude-plugins-official": true,
-    "feature-dev@claude-plugins-official": true
+    "feature-dev@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true
   },
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "allowedTools": [
+    "Read(~/.claude/skills/**)",
+    "Read(~/.claude/commands/**)",
+    "Bash(bash ~/.claude/skills/**/scripts/*)"
+  ]
 }
