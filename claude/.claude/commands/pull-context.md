@@ -31,7 +31,7 @@ Search across vault for topic matches:
 ```bash
 VAULT="${OBSIDIAN_VAULT_PATH:-$HOME/dev/Obsidian}"
 
-rg -i -l "$TOPIC" "$VAULT" --type md --glob '!.obsidian/*'
+rg -i -l "$TOPIC" "$VAULT" -g '*.md' -g '!.obsidian/**'
 ```
 
 ### Step 2: Search structured content
@@ -40,22 +40,22 @@ Use patterns from data-formats.md:
 
 **Active tasks mentioning topic:**
 ```bash
-rg -i "^\s*- \[ \].*$TOPIC" "$VAULT" --type md
+rg -i "^\s*- \[ \].*$TOPIC" "$VAULT" -g '*.md' -g '!.obsidian/**'
 ```
 
 **Notes with topic:**
 ```bash
-rg -i "^\s*- \[date::.*\].*$TOPIC" "$VAULT/Inbox" --type md
+rg -i "^\s*- \[date::.*\].*$TOPIC" "$VAULT/Inbox" -g '*.md'
 ```
 
 **List items (reading, ideas, projects):**
 ```bash
-rg -i "^\s*- \[added::.*\].*$TOPIC" "$VAULT/Inbox" --type md
+rg -i "^\s*- \[added::.*\].*$TOPIC" "$VAULT/Inbox" -g '*.md'
 ```
 
 **Project entries:**
 ```bash
-rg -i "#project.*$TOPIC" "$VAULT/Inbox" --type md
+rg -i "#project.*$TOPIC" "$VAULT/Inbox" -g '*.md'
 ```
 
 ### Step 3: Check Projects folder
