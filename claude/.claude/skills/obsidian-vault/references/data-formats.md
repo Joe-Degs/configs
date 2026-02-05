@@ -81,7 +81,15 @@ Entries must be single-line, plain text, no markdown formatting.
 
 **Tags**: #coding, #personal, #random, #work, #project
 
+**Tag meaning**:
+- #work: day job or client/freelance obligations, meetings, deliverables
+- #project: personal or learning projects, side work not tied to employer
+- #coding: code-level notes, debugging, implementation details
+- #personal: life admin, health, family, errands
+- #random: quick capture that does not fit other tags
+
 For work/project context, use compound form: `#work project-name: description` or `#project project-name: description`
+For plans, use `#work plan: ...` or `#personal plan: ...`
 
 Examples:
 ```
