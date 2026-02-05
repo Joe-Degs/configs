@@ -343,3 +343,17 @@ Option C - Autonomous with Ralphy (external CLI):
   # Or: cp <planning_dir>/claude-ralphy-prd.md ./PRD.md && ralphy
 ═══════════════════════════════════════════════════════════════
 ```
+
+---
+
+## Voice Integration
+
+All written artifacts (plans, specs, sections) should reflect the user's voice.
+Reference `relaxed-academic-writer` skill for voice patterns.
+
+Key rules for gepetto output:
+- Conversational tone ("one engineer to another")
+- No em-dashes, no staccato fragments
+- Technical precision without academic stiffness
+- Full flowing sentences (15-25 words) with natural conjunctions
+- No corporate buzzwords or marketing enthusiasm

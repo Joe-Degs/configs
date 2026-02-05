@@ -97,7 +97,7 @@ When detected, switch to learning mode:
 4. **Add to reading list if requested:**
    Use /list command pattern:
    ```bash
-   bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh lists "- [added:: YYYY-MM-DD] #reading [URL] - [description]"
+   bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh lists reading "<URL>" "<description>"
    ```
 
 5. **Resume planning** once user has enough context
@@ -185,14 +185,14 @@ Plan template:
 
 Extract actionable first steps and add via:
 ```bash
-bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh tasks "- [ ] [task description] 📅 [due date if appropriate]"
+bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh tasks "<description>" [priority] [due-date]
 ```
 
 **4. Add summary note:**
 
 Log the plan creation:
 ```bash
-bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh notes "- [date:: YYYY-MM-DD] #project created plan: [topic] - [brief summary]"
+bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh notes project "created plan: <topic>"
 ```
 
 ## Integration with existing system

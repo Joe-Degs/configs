@@ -326,3 +326,17 @@ Examples:
 **Remember**: You're not creating a curriculum. You're helping them ship something real, learn from it, and ship the next thing.
 
 Let's help them ship.
+
+---
+
+## Voice Integration
+
+Action plans should sound like the user, not generic AI. Apply voice patterns
+from `relaxed-academic-writer` skill.
+
+Key rules:
+- Direct, conversational language
+- No corporate buzzwords
+- No em-dashes or dramatic hooks
+- Full flowing sentences, not staccato fragments
+- "One engineer talking to another" tone

@@ -77,12 +77,17 @@ Examples:
 - [date:: YYYY-MM-DD] #tag content
 ```
 
+Entries must be single-line, plain text, no markdown formatting.
+
 **Tags**: #coding, #personal, #random, #work, #project
+
+For work/project context, use compound form: `#work project-name: description` or `#project project-name: description`
 
 Examples:
 ```
 - [date:: 2026-01-02] #coding need to investigate memory leak
 - [date:: 2026-01-02] #personal call mom this weekend
+- [date:: 2026-01-02] #work hubtel-templates: fix deployment config
 ```
 
 ## Savings
@@ -106,7 +111,7 @@ Examples:
 - [added:: YYYY-MM-DD] #tag content - description
 ```
 
-**Tags**: #reading, #shopping, #watching, #ideas, #project, #podcast, #talk, #video
+**Tags** (canonical list): #reading, #shopping, #watching, #ideas, #project, #podcast, #talk, #video
 
 Examples:
 ```

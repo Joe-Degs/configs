@@ -24,38 +24,58 @@ Use existing scripts and data formats:
 
 ## Process
 
+### Step 0: Use vault-context agent
+
+To keep main context clean, run the vault-context subagent for the initial search.
+Only load full files if the user asks.
+
+```text
+Task tool: subagent_type="vault-context"
+prompt: "Find context for: <topic>. Return summary with counts and file paths only."
+```
+
+If vault-context is unavailable, fall back to the ripgrep steps below.
+
 ### Step 1: Search using ripgrep
 
-Search across vault for topic matches:
+Derive vault root from inbox-path.sh, then search across vault for topic matches.
+If topic has multiple words, match any word by default.
 
 ```bash
-VAULT="${OBSIDIAN_VAULT_PATH:-$HOME/dev/Obsidian}"
+INBOX_PATH=$(bash ~/.claude/skills/obsidian-vault/scripts/inbox-path.sh)
+VAULT=$(dirname "$(dirname "$INBOX_PATH")")
 
-rg -i -l "$TOPIC" "$VAULT" -g '*.md' -g '!.obsidian/**'
+TOPIC_REGEX=$(echo "$TOPIC" | tr ' ' '|')
+
+rg -i -l -e "$TOPIC_REGEX" "$VAULT" -g '*.md' -g '!.obsidian/**'
 ```
 
 ### Step 2: Search structured content
 
 Use patterns from data-formats.md:
 
-**Active tasks mentioning topic:**
+**Active tasks mentioning topic (all Inbox months):**
 ```bash
-rg -i "^\s*- \[ \].*$TOPIC" "$VAULT" -g '*.md' -g '!.obsidian/**'
+TOPIC_REGEX=$(echo "$TOPIC" | tr ' ' '|')
+rg -i "^\s*- \[ \].*(${TOPIC_REGEX})" "$VAULT/Inbox" -g '*.md' -g '!.obsidian/**' -g '!Archive/**'
 ```
 
-**Notes with topic:**
+**Notes with topic (all Inbox months):**
 ```bash
-rg -i "^\s*- \[date::.*\].*$TOPIC" "$VAULT/Inbox" -g '*.md'
+TOPIC_REGEX=$(echo "$TOPIC" | tr ' ' '|')
+rg -i "^\s*- \[date::.*\].*(${TOPIC_REGEX})" "$VAULT/Inbox" -g '*.md' -g '!Archive/**'
 ```
 
-**List items (reading, ideas, projects):**
+**List items (reading, ideas, projects) (all Inbox months):**
 ```bash
-rg -i "^\s*- \[added::.*\].*$TOPIC" "$VAULT/Inbox" -g '*.md'
+TOPIC_REGEX=$(echo "$TOPIC" | tr ' ' '|')
+rg -i "^\s*- \[added::.*\].*(${TOPIC_REGEX})" "$VAULT/Inbox" -g '*.md' -g '!Archive/**'
 ```
 
-**Project entries:**
+**Project entries (all Inbox months):**
 ```bash
-rg -i "#project.*$TOPIC" "$VAULT/Inbox" -g '*.md'
+TOPIC_REGEX=$(echo "$TOPIC" | tr ' ' '|')
+rg -i "#project.*(${TOPIC_REGEX})" "$VAULT/Inbox" -g '*.md' -g '!Archive/**'
 ```
 
 ### Step 3: Check Projects folder

@@ -437,3 +437,22 @@ Provide:
 This skill is based on [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup. The patterns documented there come from observations of thousands of instances of AI-generated text on Wikipedia.
 
 Key insight from Wikipedia: "LLMs use statistical algorithms to guess what should come next. The result tends toward the most statistically likely result that applies to the widest variety of cases."
+
+---
+
+## Voice Integration
+
+After removing AI patterns, apply the user's authentic voice from the `relaxed-academic-writer` skill:
+
+1. Load `~/.claude/skills/relaxed-academic-writer/assets/voice-quick-ref.md`
+2. Apply the voice patterns to the humanized text
+3. Verify: flowing sentences, conversational tone, no em-dashes
+
+This ensures output sounds like the user, not just "less AI."
+
+Key voice rules to apply:
+- Full flowing sentences (15-25 words) with natural conjunctions
+- No staccato fragments for dramatic effect
+- "One engineer talking to another over coffee" tone
+- No em-dashes (use commas, parentheses, or restructure)
+- No corporate buzzwords (spearheaded, leveraged, synergized)

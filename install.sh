@@ -469,9 +469,9 @@ main() {
     # Determine stow packages based on mode
     local stow_packages
     if [[ "$INSTALL_MODE" == "desktop" ]]; then
-        stow_packages=("gui" "editor" "shell" "bins")
+        stow_packages=("gui" "editor" "shell" "bins" "claude")
     else
-        stow_packages=("editor" "shell" "bins")
+        stow_packages=("editor" "shell" "bins" "claude")
     fi
 
     # Handle update-only mode

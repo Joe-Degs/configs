@@ -45,6 +45,7 @@ Routes natural language capture requests to the appropriate slash command.
 1. Parse user's natural language to identify intent
 2. Extract relevant values (amount, category, duration, description, etc.)
 3. Follow the corresponding command's instructions to execute
+4. For work notes, prefix the content with `project: ` (example: `atlas-metrics: ...`). Infer the project from context when possible. If unknown, ask for the project name.
 
 ## Command locations
 
@@ -66,11 +67,25 @@ All commands are in `~/.claude/commands/`:
 
 ## Scripts (for command internals)
 
-Commands use these scripts - do not read, just execute:
-- `{baseDir}/scripts/add-entry.sh <section> "<entry>"` - insert entries
+Commands use these scripts. Do not construct entry formats manually.
+
+- `{baseDir}/scripts/add-entry.sh <section> <params...>` - validates, constructs, and inserts entries
 - `{baseDir}/scripts/inbox-path.sh` - get current inbox path
 - `{baseDir}/scripts/get-month-data.sh YYYY-MM` - extract month data
 - `{baseDir}/scripts/sync-repo.sh <path> [status|commit|pull|push]` - git sync with safety
+- `{baseDir}/scripts/lint-inbox.sh [YYYY-MM]` - audit inbox for format issues
+
+### add-entry.sh parameter reference
+
+| section | args | example |
+|---------|------|---------|
+| notes | `<tag> <content>` | `notes coding "memory leak"` |
+| tasks | `<description> [priority] [due]` | `tasks "fix bug" high 2026-01-10` |
+| finance | `<amount> <category> <item> [notes]` | `finance 50 food "lunch" "at work"` |
+| savings | `<fund> <amount>` | `savings travel 3000` |
+| gym | `<type> <duration> <exercises>` | `gym swim 60 "freestyle, drills"` |
+| evening | `<type> [hours] <notes>` | `evening build 2 "worked on emulator"` |
+| lists | `<tag> <content> [description]` | `lists reading "https://..." "article"` |
 
 ## Data formats
 

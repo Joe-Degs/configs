@@ -9,35 +9,41 @@ Log evening productivity to Obsidian Inbox using the obsidian-vault skill.
 - `/evening build 2 worked on emulator`
 - `/evening drift youtube rabbit hole`
 - `/evening build` (ask for hours/notes)
+- `/evening build 2 worked on emulator 2026-01-31`
 - `/evening` (ask build or drift)
 
 ## Parse input
 
 - **type**: build or drift (required)
-- **hours**: number (only for build, optional)
-- **notes**: what happened
-
-## Format
-
-Build:
-```
-- [evening:: build] [date:: YYYY-MM-DD] [project-hours:: N] [notes:: description]
-```
-
-Drift:
-```
-- [evening:: drift] [date:: YYYY-MM-DD] [notes:: description]
-```
-
-Use today's date.
+- **hours**: number (required for build, omit for drift)
+- **notes**: what happened (required)
+- **date**: YYYY-MM-DD (optional, only if last arg matches date)
 
 ## Execute
 
+Build:
 ```bash
-bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh evening "- [evening:: build] [date:: 2026-01-02] [project-hours:: 2] [notes:: worked on emulator]"
+bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh evening build <hours> "<notes>" [date]
 ```
 
+Drift:
+```bash
+bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh evening drift "<notes>" [date]
+```
+
+Examples:
+```bash
+bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh evening build 2 "worked on emulator"
+bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh evening build 2 "worked on emulator" 2026-01-31
+bash ~/.claude/skills/obsidian-vault/scripts/add-entry.sh evening drift "youtube rabbit hole"
+```
+
+The script constructs the formatted entry with evening type, date, and fields.
+If the script exits non-zero, report the error to the user.
+
 ## Confirm
+
+Report the "ok: ..." line from script output. Examples:
 
 Build:
 ```

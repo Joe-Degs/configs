@@ -2,9 +2,30 @@
 # Creates new month inbox file from template
 
 VAULT="${OBSIDIAN_VAULT_PATH:-$HOME/dev/Obsidian}"
-INBOX_FILE="$VAULT/Inbox/$(date +%Y-%m).md"
+MONTH="${1:-}"
 SCRIPT_DIR="$(dirname "$0")"
 TEMPLATE="$SCRIPT_DIR/../assets/inbox-template.md"
+
+if [[ -z "$MONTH" ]]; then
+  MONTH=$(date +%Y-%m)
+  MONTH_NAME=$(date +%B)
+  YEAR=$(date +%Y)
+else
+  if ! [[ "$MONTH" =~ ^[0-9]{4}-[0-9]{2}$ ]]; then
+    echo "error: invalid month '$MONTH' (expected YYYY-MM)" >&2
+    exit 1
+  fi
+  MONTH_NAME=$(date -j -f "%Y-%m" "$MONTH" +"%B" 2>/dev/null) || {
+    echo "error: invalid month '$MONTH' (expected YYYY-MM)" >&2
+    exit 1
+  }
+  YEAR=$(date -j -f "%Y-%m" "$MONTH" +"%Y" 2>/dev/null) || {
+    echo "error: invalid month '$MONTH' (expected YYYY-MM)" >&2
+    exit 1
+  }
+fi
+
+INBOX_FILE="$VAULT/Inbox/$MONTH.md"
 
 if [[ -f "$INBOX_FILE" ]]; then
   echo "Inbox file already exists: $INBOX_FILE"
@@ -20,8 +41,6 @@ fi
 mkdir -p "$(dirname "$INBOX_FILE")"
 
 # Replace placeholders in template
-MONTH_NAME=$(date +%B)
-YEAR=$(date +%Y)
 sed "s/{{MONTH}}/$MONTH_NAME/g; s/{{YEAR}}/$YEAR/g" "$TEMPLATE" > "$INBOX_FILE"
 
 echo "Created: $INBOX_FILE"
