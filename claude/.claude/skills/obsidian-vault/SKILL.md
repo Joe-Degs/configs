@@ -45,7 +45,7 @@ Routes natural language capture requests to the appropriate slash command.
 1. Parse user's natural language to identify intent
 2. Extract relevant values (amount, category, duration, description, etc.)
 3. Follow the corresponding command's instructions to execute
-4. For work notes, prefix the content with `project: ` (example: `atlas-metrics: ...`). Infer the project from context when possible. If unknown, ask for the project name.
+4. For work notes, prefix the content with the project name and a colon (example: `atlas-metrics: ...`). Do not add a literal `project:` prefix. Infer the project from context when possible. If unknown, ask for the project name.
 
 ## Command locations
 

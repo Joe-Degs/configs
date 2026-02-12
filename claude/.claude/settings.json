@@ -5,6 +5,7 @@
     "DISABLE_TELEMETRY": "1"
   },
   "includeCoAuthoredBy": false,
+  "model": "sonnet",
   "hooks": {
     "PreToolUse": [
       {

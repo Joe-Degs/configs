@@ -5,6 +5,7 @@ shell-integration-features = no-cursor
 
 # fonts
 font-family = "MesloLGS Nerd Font Mono"
+font-size = 14
 cursor-style = block
 cursor-style-blink = false
 
