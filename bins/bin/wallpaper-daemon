@@ -1,0 +1,8 @@
+#!/bin/bash
+
+INTERVAL="${1:-1800}"
+
+while true; do
+    sleep "$INTERVAL"
+    ~/bin/reload-wallpaper 2>/dev/null || true
+done

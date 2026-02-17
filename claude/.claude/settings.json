@@ -63,5 +63,6 @@
     "Read(~/.claude/skills/**)",
     "Read(~/.claude/commands/**)",
     "Bash(bash ~/.claude/skills/**/scripts/*)"
-  ]
+  ],
+  "effortLevel": "high"
 }

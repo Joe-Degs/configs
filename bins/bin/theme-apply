@@ -1,0 +1,58 @@
+#!/bin/bash
+set -euo pipefail
+
+THEME_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/theme.conf"
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+if [[ ! -f "$THEME_FILE" ]]; then
+    echo "theme file not found: $THEME_FILE"
+    exit 1
+fi
+
+source "$THEME_FILE"
+
+hex_to_rgb() {
+    local hex="$1"
+    printf "%d %d %d" "0x${hex:0:2}" "0x${hex:2:2}" "0x${hex:4:2}"
+}
+
+read -r ACCENT_R ACCENT_G ACCENT_B <<< "$(hex_to_rgb "$ACCENT")"
+read -r ACTIVE_R ACTIVE_G ACTIVE_B <<< "$(hex_to_rgb "$ACTIVE")"
+read -r URGENT_R URGENT_G URGENT_B <<< "$(hex_to_rgb "$URGENT")"
+read -r FG_R FG_G FG_B <<< "$(hex_to_rgb "$FG")"
+read -r BG_R BG_G BG_B <<< "$(hex_to_rgb "$BG")"
+
+export THEME_NAME BG BG_ALT INACTIVE FG MUTED ACCENT ACTIVE URGENT
+export ACCENT_R ACCENT_G ACCENT_B
+export ACTIVE_R ACTIVE_G ACTIVE_B
+export URGENT_R URGENT_G URGENT_B
+export FG_R FG_G FG_B
+export BG_R BG_G BG_B
+
+generate() {
+    local template="$1"
+    local output="${template%.tpl}"
+    if [[ -f "$template" ]]; then
+        envsubst < "$template" > "$output"
+        echo "generated: $output"
+    else
+        echo "template not found: $template"
+    fi
+}
+
+generate "$CONFIG_DIR/waybar/style.css.tpl"
+generate "$CONFIG_DIR/rofi/colors/theme.rasi.tpl"
+generate "$CONFIG_DIR/hypr/conf/general.conf.tpl"
+generate "$CONFIG_DIR/hypr/hyprlock.conf.tpl"
+
+colors_file="$CONFIG_DIR/rofi/launchers/shared/colors.rasi"
+if [[ -f "$colors_file" ]]; then
+    sed -i 's|colors/[^"]*\.rasi|colors/theme.rasi|' "$colors_file"
+    echo "updated: $colors_file"
+fi
+
+echo "reloading applications..."
+pkill -SIGUSR2 waybar 2>/dev/null || true
+hyprctl reload 2>/dev/null || true
+
+echo "theme applied: $THEME_NAME"

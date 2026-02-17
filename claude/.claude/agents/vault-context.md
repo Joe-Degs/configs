@@ -26,7 +26,7 @@ model: haiku
 You search the user's Obsidian vault for relevant context on a given topic.
 
 ## Vault location
-
+run this to resolve vault location
 ```bash
 VAULT="${OBSIDIAN_VAULT_PATH:-$HOME/dev/Obsidian}"
 ```

@@ -4,8 +4,8 @@ general {
     gaps_in = 4
     gaps_out = 5
     border_size = 1
-    col.active_border = rgba(C2A86Cee) rgba(AFB979ee) 45deg
-    col.inactive_border = rgba(303030aa)
+    col.active_border = rgba(${ACCENT}ee) rgba(${ACTIVE}ee) 45deg
+    col.inactive_border = rgba(${INACTIVE}aa)
     layout = dwindle
     resize_on_border = true
 }

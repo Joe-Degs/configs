@@ -20,17 +20,17 @@ input-field {
     dots_spacing = 0.4
     dots_center = true
     dots_rounding = -1
-    outer_color = rgba(194, 168, 108, 0.6)
+    outer_color = rgba(${ACCENT_R}, ${ACCENT_G}, ${ACCENT_B}, 0.6)
     inner_color = rgba(20, 20, 20, 0.8)
-    font_color = rgba(254, 255, 211, 0.9)
+    font_color = rgba(${FG_R}, ${FG_G}, ${FG_B}, 0.9)
     fade_on_empty = false
     placeholder_text =
     hide_input = false
-    check_color = rgba(175, 185, 121, 0.8)
-    fail_color = rgba(192, 108, 67, 0.9)
-    fail_text =  <b>()</b>
+    check_color = rgba(${ACTIVE_R}, ${ACTIVE_G}, ${ACTIVE_B}, 0.8)
+    fail_color = rgba(${URGENT_R}, ${URGENT_G}, ${URGENT_B}, 0.9)
+    fail_text = $FAIL <b>($ATTEMPTS)</b>
     fail_transition = 300
-    capslock_color = rgba(194, 168, 108, 1)
+    capslock_color = rgba(${ACCENT_R}, ${ACCENT_G}, ${ACCENT_B}, 1)
     numlock_color = -1
     bothlock_color = -1
     invert_numlock = false
@@ -44,7 +44,7 @@ input-field {
 label {
   monitor = eDP-1
   text = cmd[update:1000] echo "$(~/bin/media)"
-  color = rgba(254, 255, 211, 0.85)
+  color = rgba(${FG_R}, ${FG_G}, ${FG_B}, 0.85)
   font_size = 28
   font_family = MesloLGS Nerd Font Mono
   position = 30, -20
@@ -55,7 +55,7 @@ label {
 label {
   monitor = eDP-1
   text = cmd[update:1000] echo "$(~/bin/battery-status)"
-  color = rgba(254, 255, 211, 0.85)
+  color = rgba(${FG_R}, ${FG_G}, ${FG_B}, 0.85)
   font_size = 32
   font_family = MesloLGS Nerd Font Mono
   position = -30, -20
@@ -66,7 +66,7 @@ label {
 label {
   monitor = eDP-1
   text = cmd[update:1000] echo "$(date +"%A, %B %d")"
-  color = rgba(254, 255, 211, 0.9)
+  color = rgba(${FG_R}, ${FG_G}, ${FG_B}, 0.9)
   font_size = 26
   font_family = Fira Sans Bold
   position = 0, 380
@@ -77,7 +77,7 @@ label {
 label {
   monitor = eDP-1
   text = cmd[update:1000] echo "$(date +"%H:%M")"
-  color = rgba(254, 255, 211, 0.95)
+  color = rgba(${FG_R}, ${FG_G}, ${FG_B}, 0.95)
   font_size = 110
   font_family = Fira Sans Bold
   position = 0, 260
@@ -88,7 +88,7 @@ label {
 label {
     monitor = eDP-1
     text = Joseph
-    color = rgba(254, 255, 211, 0.9)
+    color = rgba(${FG_R}, ${FG_G}, ${FG_B}, 0.9)
     font_size = 20
     font_family = Fira Sans Bold
     position = 0, -320
@@ -99,7 +99,7 @@ label {
 label {
     monitor = eDP-1
     text = Enter Password
-    color = rgba(194, 168, 108, 0.8)
+    color = rgba(${ACCENT_R}, ${ACCENT_G}, ${ACCENT_B}, 0.8)
     font_size = 14
     font_family = Fira Sans SemiBold
     position = 0, -355

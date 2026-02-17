@@ -24,3 +24,6 @@ if [ -f "$HOME/.profile" ]; then
   source $HOME/.profile
 fi
 
+
+# opencode
+export PATH=/home/joe/.opencode/bin:$PATH
