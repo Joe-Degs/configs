@@ -19,8 +19,9 @@ Generate monthly review from Obsidian data using the obsidian-vault skill.
 5. Read `$OBSIDIAN_VAULT_PATH/Areas/Finance-Plans/YYYY-MM.md` for budget
 6. Read `$OBSIDIAN_VAULT_PATH/Areas/Fitness-Plans/YYYY-MM.md` for fitness targets
 7. Aggregate all data
-8. Generate markdown
-9. Ask: "Write to Journal/Monthly/YYYY-MM.md or output here?"
+8. Present the review summary (read-only)
+9. Ask for user reflection and plan changes
+10. Ask: "Write to Inbox Monthly review section or output only?"
 
 ## Aggregate
 
@@ -30,6 +31,25 @@ Generate monthly review from Obsidian data using the obsidian-vault skill.
 - Evenings: build/drift totals, project hours total
 - Notes: all, grouped by tag
 - Lists: all items added
+
+## Interaction
+
+After presenting the summary, ask:
+
+- "What do you think should change next month?"
+- "Are your priorities or plan targets changing?"
+
+Do not write reflections or the monthly review into the inbox until the user confirms.
+
+Then ask: "Run the brutal pass too?"
+
+If the user says yes, run `/month-review` for the same month and present it next.
+
+If the user wants the monthly summary written to the inbox:
+
+- Insert a `##### Monthly review` section if missing
+- Add a single line review: `- [review:: YYYY-MM] ...`
+- Ask if they want reflection entries added, and only add them after approval
 
 ## Output format
 

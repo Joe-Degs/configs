@@ -1,7 +1,7 @@
-command = /usr/bin/bash
 click-repeat-interval = 500
 auto-update-channel = tip
 shell-integration-features = no-cursor
+command = /bin/zsh
 
 # fonts
 font-family = "MesloLGS Nerd Font Mono"

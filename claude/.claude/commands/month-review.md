@@ -144,17 +144,17 @@ From inbox task counts:
 
 List specific overdue items.
 
-### Section 6: Reflections (generated)
+### Section 6: Reflections (interactive)
 
-Generate based on data:
+Ask the user for their reflections after presenting the data:
 
-**Wins:** `[win:: description]` for any targets met or exceeded
-**Gaps:** `[improve:: description]` for any missed targets or concerning patterns
-**Next Month Focus:** `[focus:: description]` for top 3-4 priorities
+- "What do you think should change next month?"
+- "Are your priorities or plan targets changing?"
 
-After generating, ask: "Write these reflections to Inbox? (y/n)"
+If they want reflections written:
 
-If yes, insert into `##### Reflection` section of the inbox file.
+- Use their own words, not a generated substitute
+- Insert into `##### Reflection` in the inbox file only after approval
 
 ### Section 7: To process
 

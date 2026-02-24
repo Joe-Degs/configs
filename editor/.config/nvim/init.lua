@@ -1,6 +1,6 @@
 -- always set leader first!
 vim.keymap.set("n", "<Space>", "<Nop>", { silent = true })
-vim.g.mapleader = " "
+vim.g.mapleader = "\\"
 
 -------------------------------------------------------------------------------
 --
@@ -336,30 +336,43 @@ require("lazy").setup({
 	-- fzf support for ^p
 	{
 		'junegunn/fzf.vim',
-		-- dependencies = {
-		-- 	{ 'junegunn/fzf', dir = '~/.fzf', build = './install --all' },
-		-- },
+		dependencies = {
+			{
+				'junegunn/fzf',
+				dir = vim.fn.has('mac') == 1
+					and vim.fn.trim(vim.fn.system('brew --prefix fzf'))
+					or vim.fn.expand('~/.fzf'),
+				build = vim.fn.has('mac') == 0 and './install --all' or nil,
+			},
+		},
 		config = function()
-			-- stop putting a giant window over my editor
-			vim.g.fzf_layout = { down = '~20%' }
-			-- when using :Files, pass the file list through
-			--
-			--   https://github.com/jonhoo/proximity-sort
-			--
-			-- to prefer files closer to the current file.
-			function list_cmd()
-				local base = vim.fn.fnamemodify(vim.fn.expand('%'), ':h:.:S')
-				if base == '.' then
-					-- if there is no current file,
-					-- proximity-sort can't do its thing
-					return 'fd --type file --follow'
-				else
-					return vim.fn.printf('fd --type file --follow | proximity-sort %s', vim.fn.shellescape(vim.fn.expand('%')))
-				end
-			end
-			vim.api.nvim_create_user_command('Files', function(arg)
-				vim.fn['fzf#vim#files'](arg.qargs, { source = list_cmd(), options = '--tiebreak=index' }, arg.bang)
-			end, { bang = true, nargs = '?', complete = "dir" })
+			vim.g.fzf_layout = { window = { width = 0.7, height = 0.4, xoffset = 0.5, yoffset = 0.5 } }
+			vim.g.fzf_colors = {
+				fg      = { 'fg', 'Normal' },
+				bg      = { 'bg', 'Normal' },
+				hl      = { 'fg', 'Comment' },
+				['fg+'] = { 'fg', 'Normal' },
+				['bg+'] = { 'bg', 'CursorLine' },
+				['hl+'] = { 'fg', 'Statement' },
+				info    = { 'fg', 'PreProc' },
+				border  = { 'fg', 'Comment' },
+				prompt  = { 'fg', 'Conditional' },
+				pointer = { 'fg', 'Exception' },
+				marker  = { 'fg', 'Keyword' },
+				spinner = { 'fg', 'Label' },
+				header  = { 'fg', 'Comment' },
+			}
+			vim.api.nvim_create_user_command('Rg', function(arg)
+				local fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+				local spec = vim.fn['fzf#vim#with_preview']({
+					options = {
+						'--phony', '--query', arg.args,
+						'--bind', 'change:reload:' .. string.format(fmt, '{q}'),
+					},
+				})
+				vim.fn['fzf#vim#grep'](string.format(fmt, vim.fn.shellescape(arg.args)), 1, spec, arg.bang)
+			end, { bang = true, nargs = '*' })
+			vim.keymap.set('n', '<leader>s', '<cmd>Rg<cr>')
 		end
 	},
 	-- LSP
@@ -623,16 +636,6 @@ set formatoptions+=r " continue comments when pressing ENTER in I mode
 set formatoptions+=q " enable formatting of comments with gq
 set formatoptions+=n " detect lists for formatting
 set formatoptions+=b " auto-wrap in insert mode, and do not wrap old long lines
-
-" <leader>s for Rg search
-noremap <leader>s :Rg
-let g:fzf_layout = { 'down': '~20%' }
-command! -bang -nargs=* Rg
-\ call fzf#vim#grep(
-\   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-\   <bang>0 ? fzf#vim#with_preview('up:60%')
-\           : fzf#vim#with_preview('right:50%:hidden', '?'),
-\   <bang>0)
 
 " <leader>q shows stats
 nnoremap <leader>q g<c-g>
