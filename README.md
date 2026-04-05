@@ -68,8 +68,10 @@ ghostty-git papirus-icon-theme
 │   └── bin/
 ├── claude/                 # Claude Code config
 │   └── .claude/
-├── opencode/               # OpenCode agents only
-│   └── .config/opencode/agents/
+├── opencode/               # OpenCode agents + profile tooling
+│   ├── .config/opencode/agents/
+│   ├── scripts/setup-profile.sh
+│   └── README.md
 ├── install.sh              # Installation script
 └── README.md               # This file
 ```
@@ -83,6 +85,7 @@ ghostty-git papirus-icon-theme
 | `shell` | Bash, tmux, vim configs | `~/` |
 | `bins` | Custom utility scripts | `~/bin/` |
 | `claude` | Claude Code configuration | `~/.claude/` |
+| `opencode` | OpenCode custom agents and profile helper scripts | manual |
 
 ### Manual Stow Commands
 
@@ -93,6 +96,7 @@ stow editor     # Symlink Neovim config
 stow shell      # Symlink shell configs
 stow bins       # Symlink custom scripts
 stow claude     # Symlink Claude Code config
+```
 
 OpenCode agents are manual for now:
 
@@ -101,6 +105,13 @@ rm -f ~/.config/opencode/agents
 ln -s ~/.dotfiles/opencode/.config/opencode/agents ~/.config/opencode/agents
 ```
 
+Create a new isolated OpenCode profile launcher:
+
+```bash
+./opencode/scripts/setup-profile.sh golly
+```
+
+```bash
 stow -D gui     # Remove GUI symlinks
 stow -R gui     # Restow (remove + re-add)
 ```
