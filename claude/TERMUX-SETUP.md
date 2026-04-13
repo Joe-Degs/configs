@@ -166,6 +166,76 @@ Run `/help` in Claude Code---your custom commands should appear listed under cus
 
 ---
 
+## Issue 4: hardcoded /tmp/claude paths break sandbox on Termux
+
+### Symptoms
+
+- Commands that take more than a few seconds fail with:
+
+```
+EACCES: permission denied, mkdir '/tmp/claude/-data-data-com-termux-files-home/tasks'
+```
+
+- `git fetch`, `git push`, and other network-touching commands fail inside Claude Code
+- Simple commands like `echo "test"` and `git status` still work (they complete before the sandbox task-tracking kicks in)
+
+### Root cause
+
+Claude Code hardcodes `/tmp/claude` in multiple places inside `cli.js`:
+
+1. The sandbox filesystem allow list includes `/tmp/claude` and `/private/tmp/claude` (macOS), but not the Termux equivalent.
+2. The `CLAUDE_TMPDIR` env var controls the `TMPDIR` passed into the sandbox, but the allow list is still hardcoded.
+3. A browser bridge helper generates paths like `/tmp/claude-mcp-browser-bridge-<uuid>`.
+
+On Termux, `/tmp` is either nonexistent or not writable. The correct temp directory is `$PREFIX/tmp` (`/data/data/com.termux/files/usr/tmp`).
+
+### Triage steps
+
+1. Check if the error is the sandbox `/tmp` issue:
+
+```bash
+grep -c "/tmp/claude" "$(dirname $(which claude))/../lib/node_modules/@anthropic-ai/claude-code/cli.js"
+```
+
+If the count is greater than 0 and paths point to `/tmp/claude` (not Termux's tmp), the patch is needed.
+
+2. Confirm Termux tmp is writable:
+
+```bash
+touch "$PREFIX/tmp/test-write" && rm "$PREFIX/tmp/test-write" && echo "writable"
+```
+
+### Fix
+
+Replace all hardcoded `/tmp/claude` paths with the Termux tmp equivalent:
+
+```bash
+CLAUDE_CLI="$(dirname $(which claude))/../lib/node_modules/@anthropic-ai/claude-code/cli.js"
+sed -i "s|/tmp/claude|${PREFIX}/tmp/claude|g" "$CLAUDE_CLI"
+```
+
+Verify:
+
+```bash
+grep -c "${PREFIX}/tmp/claude" "$CLAUDE_CLI"
+# Should return 9+ (matching the original hardcoded count)
+```
+
+The fix requires restarting Claude Code since the running process already has the old paths in memory.
+
+### Persistence
+
+Like the ripgrep fix, this breaks on Claude Code updates. The quick setup script below handles both.
+
+### Related GitHub issues
+
+- [#15637](https://github.com/anthropics/claude-code/issues/15637) - Hardcoded /tmp/claude paths break on Termux
+- [#15700](https://github.com/anthropics/claude-code/issues/15700) - Background tasks ignore $TMPDIR
+- [#17366](https://github.com/anthropics/claude-code/issues/17366) - EACCES permission denied on Android/Termux
+- [#18679](https://github.com/anthropics/claude-code/issues/18679) - Feature request for CLAUDE_TMPDIR env var
+
+---
+
 ## Verification checklist
 
 After applying fixes, verify:
@@ -194,6 +264,12 @@ grep "agent" ~/.claude/debug/latest | grep -v error
 grep "Loaded.*skills" ~/.claude/debug/latest
 ```
 
+5. No /tmp/claude sandbox errors (run a long command like `git fetch`):
+
+```bash
+git -C "$OBSIDIAN_VAULT_PATH" fetch origin
+```
+
 ---
 
 ## Quick setup script
@@ -206,21 +282,33 @@ Run after each Claude Code update:
 
 set -e
 
+CLAUDE_PKG="$(dirname $(which claude))/../lib/node_modules/@anthropic-ai/claude-code"
 RG_SRC="/data/data/com.termux/files/usr/bin/rg"
-RG_DST="/data/data/com.termux/files/usr/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-android"
+RG_DST="${CLAUDE_PKG}/vendor/ripgrep/arm64-android"
+CLAUDE_CLI="${CLAUDE_PKG}/cli.js"
+TERMUX_TMP="${PREFIX}/tmp"
 
-# Check ripgrep installed
+echo "Applying Claude Code Termux fixes..."
+
+# Fix 1: ripgrep symlink
 if [[ ! -x "$RG_SRC" ]]; then
     echo "ripgrep not found. Install with: pkg install ripgrep"
     exit 1
 fi
 
-# Create symlink
 mkdir -p "$RG_DST"
 ln -sf "$RG_SRC" "$RG_DST/rg"
+echo "  ripgrep: symlinked ($(rg --version | head -1))"
 
-echo "Claude Code Termux fix applied"
-echo "ripgrep: $(rg --version | head -1)"
+# Fix 2: /tmp/claude sandbox paths
+if grep -q '"/tmp/claude"' "$CLAUDE_CLI" 2>/dev/null; then
+    sed -i "s|/tmp/claude|${TERMUX_TMP}/claude|g" "$CLAUDE_CLI"
+    echo "  sandbox: patched /tmp/claude -> ${TERMUX_TMP}/claude"
+else
+    echo "  sandbox: already patched"
+fi
+
+echo "Done. Restart Claude Code for changes to take effect."
 ```
 
 Save as `~/bin/fix-claude-termux.sh` and run after updates.
@@ -230,3 +318,4 @@ Save as `~/bin/fix-claude-termux.sh` and run after updates.
 ## Date
 
 Initial documentation: 2026-01-05
+Updated: 2026-01-29 (added issue 4: /tmp/claude sandbox paths)
