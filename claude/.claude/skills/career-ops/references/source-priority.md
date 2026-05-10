@@ -19,15 +19,25 @@ Look for:
 
 Check `Areas/Career/Applications/_tracker.md` to understand pipeline state and whether the note is active, stale, or already closed.
 
-## 3. work history notes
+## 3. evidence packet and evidence records
+
+Use the shared evidence scripts first:
+
+- `pack.py` for ranked evidence selection
+- `query.py` for targeted lookups
+- `gaps.py` for unresolved weak spots
+
+Then use `Areas/Career/Evidence/Records/**/*.md`, `Areas/Career/Evidence/follow-up.md`, and related evidence docs when more context is needed.
+
+## 4. work history notes
 
 Use `Areas/Career/work-history-*.md` for stable career evidence and metrics.
 
-## 4. resume framework
+## 5. resume framework
 
 Use `Areas/Career/resume-framework.md` for preferred bullet structure and career framing.
 
-## 5. project notes
+## 6. project notes
 
 Search `Areas/Projects/**` and nearby project notes for evidence that matches the JD.
 
@@ -38,7 +48,7 @@ Prefer projects with:
 - measurable outcomes
 - recent activity
 
-## 6. active tasks and recent notes
+## 7. active tasks and recent notes
 
 Check `Inbox/*.md` and related notes for proof of recent work, current focus, and language that can support resume bullets or interview stories.
 

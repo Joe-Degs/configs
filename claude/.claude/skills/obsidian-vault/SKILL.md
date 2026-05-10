@@ -10,7 +10,8 @@ description: |
   completion ("done with", "finished reading", "read that article", "watched that", "listened to"),
   syncing ("sync vault", "sync obsidian", "sync configs", "push my changes"),
   planning ("plan", "deep plan", "help me plan", "let's plan"),
-  context ("pull context", "get context", "what do I have on", "find my notes on").
+  context ("pull context", "get context", "what do I have on", "find my notes on"),
+  evidence ("evidence pack", "career evidence", "what evidence do I have for", "evidence gaps", "what gaps do I have in my evidence").
 ---
 
 # Obsidian vault
@@ -39,6 +40,8 @@ Routes natural language capture requests to the appropriate slash command.
 | "let's plan my trip to ireland" | `/deepplan` | → /deepplan ireland trip |
 | "what do I have on emulator" | `/pull-context` | → /pull-context emulator |
 | "find my notes on distributed systems" | `/pull-context` | → /pull-context distributed systems |
+| "what evidence do I have for platform roles" | `/evidence-pack` | → /evidence-pack platform engineer |
+| "what gaps do I have in my career evidence" | `/evidence-gaps` | → /evidence-gaps |
 
 ## How to route
 
@@ -49,7 +52,9 @@ Routes natural language capture requests to the appropriate slash command.
 
 ## Command locations
 
-All commands are in `~/.claude/commands/`:
+Commands are in the environment command directory. For this profile, that is `~/.config/opencode-profiles/golly/opencode/commands/`.
+
+Available commands:
 - `task.md` - add tasks
 - `spend.md` - log spending
 - `workout.md` - log workouts
@@ -64,6 +69,8 @@ All commands are in `~/.claude/commands/`:
 - `sync.md` - sync vault or configs to GitHub
 - `deepplan.md` - deep planning with research
 - `pull-context.md` - pull vault context for a topic
+- `evidence-pack.md` - build a role-focused evidence packet
+- `evidence-gaps.md` - inspect gaps in the career evidence system
 
 ## Scripts (for command internals)
 
@@ -74,6 +81,10 @@ Commands use these scripts. Do not construct entry formats manually.
 - `{baseDir}/scripts/get-month-data.sh YYYY-MM` - extract month data
 - `{baseDir}/scripts/sync-repo.sh <path> [status|commit|pull|push]` - git sync with safety
 - `{baseDir}/scripts/lint-inbox.sh [YYYY-MM]` - audit inbox for format issues
+- `{baseDir}/scripts/career-evidence/query.py` - query normalized evidence records
+- `{baseDir}/scripts/career-evidence/pack.py` - build ranked evidence packets
+- `{baseDir}/scripts/career-evidence/gaps.py` - report evidence gaps and weak spots
+- `{baseDir}/scripts/career-evidence/stats.py` - summarize evidence counts and readiness
 
 ### add-entry.sh parameter reference
 

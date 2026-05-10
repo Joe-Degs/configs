@@ -17,6 +17,8 @@ selected_work_history:
   source_path:
   recency:
   confidence:
+  resume_ready:
+  interview_ready:
   summary:
   proof_excerpt:
   metrics:
@@ -27,6 +29,8 @@ selected_projects:
   source_path:
   recency:
   confidence:
+  resume_ready:
+  interview_ready:
   summary:
   proof_excerpt:
   metrics:
@@ -37,6 +41,8 @@ selected_tasks_or_notes:
   source_path:
   recency:
   confidence:
+  resume_ready:
+  interview_ready:
   summary:
   proof_excerpt:
   proof_value:

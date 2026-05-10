@@ -18,12 +18,12 @@ description: >
 
 This skill is the entry point and coordinator for the career application system.
 
-`career-ops` decides what needs to happen next, gathers evidence from the vault, and hands writing work to `resume-maker` when appropriate.
+`career-ops` decides what needs to happen next, gathers evidence from the vault through the shared evidence scripts first, and hands writing work to `resume-maker` when appropriate.
 
 ## Core role
 
 - inspect the current application ecosystem before asking the user to restate known facts
-- scout the best supporting evidence from the vault
+- scout the best supporting evidence from the vault, using the shared evidence scripts first
 - decide the next useful artifact or action based on the application stage
 - coordinate with `resume-maker` when polished writing is needed
 - keep save-back explicit and opt-in
@@ -48,6 +48,9 @@ Read from these sources in priority order. See `references/source-priority.md`.
 
 - `Areas/Career/Applications/*.md`
 - `Areas/Career/Applications/_tracker.md`
+- shared career-evidence scripts under `~/.config/opencode-profiles/golly/opencode/skills/obsidian-vault/scripts/career-evidence/`
+- `Areas/Career/Evidence/Records/**/*.md`
+- `Areas/Career/Evidence/follow-up.md`
 - `Areas/Career/work-history-*.md`
 - `Areas/Career/resume-framework.md`
 - project notes under `Areas/Projects/**`
@@ -72,13 +75,21 @@ If the request is only polished writing and the user already supplied the necess
 
 ### 2. scout context first
 
-Use the `vault-context` subagent for the initial search to keep main context clean.
+Call the shared evidence scripts first:
+
+- use `pack.py` when the user needs the best evidence for a role, JD, or application stage
+- use `query.py` for targeted record lookups
+- use `gaps.py` when the user asks what is missing or weak
+
+Use the `vault-context` subagent when available only after that when script output is weak, incomplete, or needs enrichment. Otherwise, read the smallest useful set of evidence notes directly.
 
 Then load only the most relevant files.
 
 Do not paste giant raw note dumps. Build a ranked shortlist.
 
 ### 3. build the evidence shortlist
+
+Start from the packet or query output, then refine if needed.
 
 Extract and rank evidence by:
 
@@ -115,7 +126,7 @@ Examples:
 
 ### 5. hand off writing work when needed
 
-If the next step is a writing artifact, prepare a structured evidence pack using `references/evidence-pack-schema.md` and invoke `resume-maker`.
+If the next step is a writing artifact, prepare a structured evidence pack using `references/evidence-pack-schema.md`, preferably from `pack.py`, and invoke `resume-maker`.
 
 The handoff should be explicit. State what artifact is needed and what evidence was selected.
 
@@ -154,6 +165,7 @@ Depending on the request, `career-ops` should produce some or all of:
 4. ask focused follow-up questions only when evidence is incomplete
 5. prefer using what already exists in the vault over asking the user to rewrite their work from memory
 6. prefer saving into the current application note unless the user explicitly wants a separate note
+7. prefer the shared evidence scripts over ad hoc vault reconstruction
 
 ## References
 
@@ -162,3 +174,4 @@ Depending on the request, `career-ops` should produce some or all of:
 | `references/source-priority.md` | search order and evidence ranking rules |
 | `references/evidence-pack-schema.md` | handoff format for resume-maker |
 | `references/workflows.md` | stage-aware workflows and save-back choices |
+| `references/evidence-integration.md` | shared script usage and packet rules |

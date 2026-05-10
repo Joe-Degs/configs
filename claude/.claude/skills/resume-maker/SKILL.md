@@ -22,6 +22,7 @@ Use it when the next step is to turn evidence into polished writing.
 - `career-ops` is the entry point and coordinator
 - `resume-maker` is the writing engine
 - prefer structured evidence from `career-ops` when available
+- prefer evidence packets built from the shared career-evidence scripts over raw vault scouting
 - if `career-ops` has not been used and the user has relevant vault context, pull the minimum relevant context before writing
 
 Use `career-ops` first when the request involves any of the following:
@@ -44,7 +45,7 @@ Use `resume-maker` directly only when the task is already narrowed to writing.
 
 ## Preferred inputs
 
-Best case input is a structured packet from `career-ops` containing:
+Best case input is a structured packet from `career-ops`, usually produced from `pack.py`, containing:
 
 - company
 - role
@@ -59,7 +60,7 @@ Best case input is a structured packet from `career-ops` containing:
 - tone constraints
 - save-back preference
 
-If that packet is missing, assemble the minimum viable context from the vault and ask focused follow-up questions.
+If that packet is missing, use the smallest useful fallback, preferably targeted `query.py` output before broader vault context, and ask focused follow-up questions only where needed.
 
 ## Required gating before tailoring or scoring
 
@@ -71,14 +72,18 @@ Do not guess the target role.
 
 Before writing from scratch, look for evidence in this order:
 
-1. the current application note, if one exists
-2. structured evidence from `career-ops`
-3. `Areas/Career/work-history-*.md`
-4. `Areas/Career/resume-framework.md`
-5. matching project notes
-6. supporting tasks or recent notes that contain metrics, outcomes, or ownership
+1. structured evidence from `career-ops`
+2. the current application note, if one exists
+3. targeted `query.py` output when a narrow fallback lookup is needed
+4. `Areas/Career/Evidence/Records/**/*.md`
+5. `Areas/Career/work-history-*.md`
+6. `Areas/Career/resume-framework.md`
+7. matching project notes
+8. supporting tasks or recent notes that contain metrics, outcomes, or ownership
 
 Do not dump raw search results into the answer. Extract the strongest proof and move on.
+
+Do not re-scout the entire vault when a good packet already exists.
 
 ## Task types
 
@@ -205,3 +210,4 @@ Do not write anything unless the user chooses one.
 | `references/resume-structure.md` | full resume structure and ordering |
 | `references/upwork-framework.md` | writing any Upwork proposal |
 | `references/upwork-proposals.md` | proposal structure models and proof paragraph pool |
+| `references/evidence-packet-usage.md` | how to consume packets and fallback query output |
