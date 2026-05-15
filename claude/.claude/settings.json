@@ -59,10 +59,11 @@
     "greptile@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
   "allowedTools": [
     "Read(~/.claude/skills/**)",
     "Read(~/.claude/commands/**)",
     "Bash(bash ~/.claude/skills/**/scripts/*)"
   ],
-  "effortLevel": "high"
+  "editorMode": "vim"
 }

@@ -27,6 +27,28 @@ Examples:
 - [x] send email ✅ 2026-01-02
 ```
 
+### Project tasks
+
+Project-specific tasks live in the relevant project note, not the global inbox. Use this structure:
+
+```
+## project tasks
+
+### next
+- [ ] inspect browser answer quality 🔼
+
+### blocked
+- [ ] wire Langfuse dataset evals ⏫ 📅 2026-05-20
+
+### later
+- [ ] clean up OpenWebUI function session warning 🔽
+
+### done
+- [x] isolate reranker on CPU node ⏫ ✅ 2026-05-15
+```
+
+Use `/project-task` to add, move, or complete these tasks. The task line format stays the same as `/task`; the status comes from the `### next`, `### blocked`, `### later`, or `### done` heading.
+
 ## Spending
 
 ```

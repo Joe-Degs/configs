@@ -2,7 +2,7 @@
 name: obsidian-vault
 description: |
   Routes natural language to Obsidian capture commands. Triggers on:
-  spending ("spent", "bought", "paid", "log spending"), tasks ("add task", "todo", "remind me"),
+  spending ("spent", "bought", "paid", "log spending"), tasks ("add task", "todo", "remind me"), project tasks ("add project task", "project follow-up"),
   workouts ("went to gym", "swam", "ran", "workout"), evenings ("build night", "drift", "productive evening"),
   notes ("note to self", "capture note"), lists ("add to reading list", "add to list"),
   savings ("saved", "deposited", "savings fund"), reviews ("how was my week", "monthly review"),
@@ -24,6 +24,7 @@ Routes natural language capture requests to the appropriate slash command.
 |-----------|----------|------------------------|
 | "spent 50 on lunch" | `/spend` | → /spend 50 food lunch |
 | "remind me to call mom" | `/task` | → /task call mom |
+| "add project task to inspect rerank answer quality" | `/project-task` | → /project-task add Areas/Projects/Hubtel-ML-Agents/selfhosted-llm/selfhosted-llm-devlog-2026-05-12 next "inspect rerank answer quality" |
 | "went swimming for an hour" | `/workout` | → /workout swim 60 |
 | "productive night, worked on emulator" | `/evening` | → /evening build 2 emulator |
 | "note: check the memory leak" | `/note` | → /note coding check the memory leak |
@@ -49,6 +50,7 @@ Routes natural language capture requests to the appropriate slash command.
 2. Extract relevant values (amount, category, duration, description, etc.)
 3. Follow the corresponding command's instructions to execute
 4. For work notes, prefix the content with the project name and a colon (example: `atlas-metrics: ...`). Do not add a literal `project:` prefix. Infer the project from context when possible. If unknown, ask for the project name.
+5. For project-specific follow-ups, use `/project-task` when the target note is known or inferable. Use `/task` only for the global inbox.
 
 ## Command locations
 
@@ -56,6 +58,7 @@ Commands are in the environment command directory. For this profile, that is `~/
 
 Available commands:
 - `task.md` - add tasks
+- `project-task.md` - add or update project-scoped tasks
 - `spend.md` - log spending
 - `workout.md` - log workouts
 - `evening.md` - log build/drift evenings
@@ -77,6 +80,7 @@ Available commands:
 Commands use these scripts. Do not construct entry formats manually.
 
 - `{baseDir}/scripts/add-entry.sh <section> <params...>` - validates, constructs, and inserts entries
+- `{baseDir}/scripts/project-task.sh <add|move|done> <params...>` - manages project-scoped tasks inside project notes
 - `{baseDir}/scripts/inbox-path.sh` - get current inbox path
 - `{baseDir}/scripts/get-month-data.sh YYYY-MM` - extract month data
 - `{baseDir}/scripts/sync-repo.sh <path> [status|commit|pull|push]` - git sync with safety
@@ -92,6 +96,9 @@ Commands use these scripts. Do not construct entry formats manually.
 |---------|------|---------|
 | notes | `<tag> <content>` | `notes coding "memory leak"` |
 | tasks | `<description> [priority] [due]` | `tasks "fix bug" high 2026-01-10` |
+| project task add | `<note> <next\|blocked\|later> <description> [priority] [due]` | `add note.md next "fix bug" high 2026-01-10` |
+| project task move | `<note> <search> <next\|blocked\|later>` | `move note.md "fix bug" blocked` |
+| project task done | `<note> <search> [done]` | `done note.md "fix bug" 2026-01-10` |
 | finance | `<amount> <category> <item> [notes]` | `finance 50 food "lunch" "at work"` |
 | savings | `<fund> <amount>` | `savings travel 3000` |
 | gym | `<type> <duration> <exercises>` | `gym swim 60 "freestyle, drills"` |
