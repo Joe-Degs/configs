@@ -17,7 +17,7 @@ HERDR_BIN="$HOME/.local/bin/herdr"
 ENV_FILE="$HOME/.config/vault-hub.env"
 GIT_NAME="Joseph Attah"
 GIT_EMAIL="npedev8660@gmail.com"
-STOW_PACKAGES=(claude shell vaulthub)
+STOW_PACKAGES=(bins claude shell vaulthub)
 
 info() { echo "==> $*"; }
 die()  { echo "bootstrap-vault-hub: $*" >&2; exit 1; }
