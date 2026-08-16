@@ -77,6 +77,14 @@ info "stowing ${STOW_PACKAGES[*]}"
 for pkg in "${STOW_PACKAGES[@]}"; do
   [[ -d "$DOTFILES/$pkg" ]] || die "stow package not found: $DOTFILES/$pkg"
 done
+# Pre-create real directories so stow links files instead of folding whole trees. Without
+# this, ~/.config/systemd becomes a symlink into the repo and `systemctl --user enable`
+# writes default.target.wants/ straight into version control.
+while IFS= read -r dir; do
+  mkdir -p "$HOME/$dir"
+done < <(cd "$DOTFILES" && for pkg in "${STOW_PACKAGES[@]}"; do
+           find "$pkg" -mindepth 2 -type d -printf '%P\n'
+         done)
 # stow refuses to touch anything it does not own: real files (~/.bashrc) and hand-made
 # absolute symlinks (~/.tmux.conf -> /home/joe/.dotfiles/...) both abort the whole run.
 # Links already resolving into the dotfiles tree are redundant, so drop them and let stow

@@ -1,10 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "cleanupPeriodDays": 365,
-  "env": {
-    "DISABLE_TELEMETRY": "1",
-    "TMPDIR": "/data/data/com.termux/files/usr/tmp"
-  },
+  "env": {},
   "includeCoAuthoredBy": false,
   "hooks": {
     "PreToolUse": [
@@ -38,6 +35,18 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/herdr-agent-state.sh session",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
@@ -60,10 +69,11 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
+  "editorMode": "vim",
   "allowedTools": [
     "Read(~/.claude/skills/**)",
     "Read(~/.claude/commands/**)",
     "Bash(bash ~/.claude/skills/**/scripts/*)"
   ],
-  "editorMode": "vim"
+  "agentPushNotifEnabled": true
 }

@@ -8,3 +8,7 @@ install.log
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# generated at runtime, not config
+claude/.claude/backups/
+vaulthub/.config/systemd/user/*.target.wants/
