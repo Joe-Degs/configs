@@ -34,7 +34,10 @@ done
 [[ -d "$DOTFILES" ]] || die "dotfiles not found at $DOTFILES"
 
 info "checking GitHub ssh auth"
-if ! ssh -o BatchMode=yes -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+# Not a pipeline on purpose: `ssh -T git@github.com` exits 1 even when the key is
+# accepted, and pipefail would turn that into a false negative.
+gh_auth=$(ssh -o BatchMode=yes -T git@github.com 2>&1 || true)
+if [[ "$gh_auth" != *"successfully authenticated"* ]]; then
   die "ssh to GitHub failed.
   Generate a key and add the public half at https://github.com/settings/keys:
     ssh-keygen -t ed25519 -C \"\$(whoami)@\$(hostname)\" -f ~/.ssh/id_ed25519 -N \"\"
