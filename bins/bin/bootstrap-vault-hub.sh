@@ -77,7 +77,15 @@ info "stowing ${STOW_PACKAGES[*]}"
 for pkg in "${STOW_PACKAGES[@]}"; do
   [[ -d "$DOTFILES/$pkg" ]] || die "stow package not found: $DOTFILES/$pkg"
 done
-# Pre-create real directories so stow links files instead of folding whole trees. Without
+# Order matters. Unstow first: stow "folds" a whole package directory into a single
+# symlink (~/.claude -> the repo) when the target does not exist yet, and both mkdir and
+# mv follow a folded symlink straight into version control. Unfold before touching
+# anything underneath.
+for pkg in "${STOW_PACKAGES[@]}"; do
+  stow -D -d "$DOTFILES" -t "$HOME" "$pkg" 2>/dev/null || true
+done
+
+# Now real directories can be created safely, which stops stow re-folding them. Without
 # this, ~/.config/systemd becomes a symlink into the repo and `systemctl --user enable`
 # writes default.target.wants/ straight into version control.
 while IFS= read -r dir; do
@@ -85,17 +93,20 @@ while IFS= read -r dir; do
 done < <(cd "$DOTFILES" && for pkg in "${STOW_PACKAGES[@]}"; do
            find "$pkg" -mindepth 2 -type d -printf '%P\n'
          done)
+
 # stow refuses to touch anything it does not own: real files (~/.bashrc) and hand-made
 # absolute symlinks (~/.tmux.conf -> /home/joe/.dotfiles/...) both abort the whole run.
-# Links already resolving into the dotfiles tree are redundant, so drop them and let stow
-# recreate them as its own relative links. Real files get backed up rather than adopted:
-# --adopt would pull this machine's copy into the repo and push it to every other machine.
+# Back up rather than --adopt: --adopt would pull this machine's copy into the repo and
+# push it to every other machine.
 while IFS= read -r target; do
   path="$HOME/$target"
   [[ -e "$path" || -L "$path" ]] || continue
 
-  if [[ -L "$path" && "$(readlink -f "$path")" == "$DOTFILES"/* ]]; then
-    rm "$path"
+  # Resolve the whole path, not just the leaf. A real file under a symlinked ancestor
+  # lives in the repo, and renaming it would mangle version control.
+  resolved=$(readlink -f "$path" 2>/dev/null || true)
+  if [[ -n "$resolved" && "$resolved" == "$DOTFILES"/* ]]; then
+    [[ -L "$path" ]] && rm "$path"
     continue
   fi
 

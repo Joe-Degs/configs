@@ -12,3 +12,4 @@ __pycache__/
 # generated at runtime, not config
 claude/.claude/backups/
 vaulthub/.config/systemd/user/*.target.wants/
+claude/.claude/cache/
