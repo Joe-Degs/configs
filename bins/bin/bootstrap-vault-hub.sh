@@ -119,8 +119,15 @@ done < <(cd "$DOTFILES" && for pkg in "${STOW_PACKAGES[@]}"; do
          done)
 stow -d "$DOTFILES" -t "$HOME" "${STOW_PACKAGES[@]}"
 
-info "installing the herdr claude integration"
-"$HERDR_BIN" integration install claude || echo "    integration install skipped"
+info "checking the herdr claude integration"
+# The hook script and its SessionStart entry are both version-controlled, so the
+# installer has nothing to add. Running it anyway appends a duplicate hook with a
+# hardcoded /home/joe path, because it does not recognize the portable entry as its own.
+if [[ -f "$HOME/.claude/hooks/herdr-agent-state.sh" ]]; then
+  echo "    already present, skipping installer"
+else
+  "$HERDR_BIN" integration install claude || echo "    integration install skipped"
+fi
 
 info "cloning the vault"
 if [[ -d "$VAULT/.git" ]]; then
