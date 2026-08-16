@@ -27,6 +27,10 @@ case "$(uname -s)" in
   *) die "this bootstraps the Linux hub only, not $(uname -s)" ;;
 esac
 
+# npm's prefix here is ~/.local, and this script moves ~/.bashrc aside while stowing,
+# so it cannot rely on the shell config for PATH.
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
 for cmd in git curl stow jq npm loginctl systemctl; do
   command -v "$cmd" >/dev/null || die "missing dependency: $cmd"
 done
@@ -69,24 +73,35 @@ else
   echo "    installed $HERDR_TAG"
 fi
 
-info "installing the herdr claude integration"
-"$HERDR_BIN" integration install claude || echo "    integration install skipped"
-
 info "stowing ${STOW_PACKAGES[*]}"
 for pkg in "${STOW_PACKAGES[@]}"; do
   [[ -d "$DOTFILES/$pkg" ]] || die "stow package not found: $DOTFILES/$pkg"
 done
-# stow refuses to clobber real files, which is how ~/.bashrc silently blocked the shell
-# package before. Back up rather than --adopt: --adopt would pull this machine's bashrc
-# into the repo and push it to every other machine.
+# stow refuses to touch anything it does not own: real files (~/.bashrc) and hand-made
+# absolute symlinks (~/.tmux.conf -> /home/joe/.dotfiles/...) both abort the whole run.
+# Links already resolving into the dotfiles tree are redundant, so drop them and let stow
+# recreate them as its own relative links. Real files get backed up rather than adopted:
+# --adopt would pull this machine's copy into the repo and push it to every other machine.
 while IFS= read -r target; do
-  [[ -e "$HOME/$target" && ! -L "$HOME/$target" ]] || continue
-  info "backing up ~/$target to ~/${target}.pre-stow"
-  mv "$HOME/$target" "$HOME/${target}.pre-stow"
+  path="$HOME/$target"
+  [[ -e "$path" || -L "$path" ]] || continue
+
+  if [[ -L "$path" && "$(readlink -f "$path")" == "$DOTFILES"/* ]]; then
+    rm "$path"
+    continue
+  fi
+
+  backup="${path}.pre-stow"
+  [[ -e "$backup" ]] && backup="${path}.pre-stow.$(date +%Y%m%d%H%M%S)"
+  info "backing up ~/$target to ${backup#"$HOME"/}"
+  mv "$path" "$backup"
 done < <(cd "$DOTFILES" && for pkg in "${STOW_PACKAGES[@]}"; do
            find "$pkg" -type f -printf '%P\n'
          done)
 stow -d "$DOTFILES" -t "$HOME" "${STOW_PACKAGES[@]}"
+
+info "installing the herdr claude integration"
+"$HERDR_BIN" integration install claude || echo "    integration install skipped"
 
 info "cloning the vault"
 if [[ -d "$VAULT/.git" ]]; then
