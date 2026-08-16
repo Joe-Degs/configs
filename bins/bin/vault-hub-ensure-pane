@@ -1,0 +1,67 @@
+#!/bin/bash
+# Usage: vault-hub-ensure-pane
+#
+# Ensures exactly one herdr pane is running the vault Claude session.
+# Idempotent: runs at boot via herdr-vault.service ExecStartPost, safe to run by hand.
+#
+# herdr's own agent resume is off (see ~/.config/herdr/config.toml), so after a reboot
+# herdr restores saved panes as bare shells. Without the guard below, every boot would
+# add another pane.
+
+set -euo pipefail
+
+HERDR="$HOME/.local/bin/herdr"
+ENV_FILE="$HOME/.config/vault-hub.env"
+WRAPPER="vault-claude"
+SERVER_TIMEOUT=30
+
+die() { echo "vault-hub-ensure-pane: $*" >&2; exit 1; }
+
+# shellcheck source=/dev/null
+[[ -f "$ENV_FILE" ]] && source "$ENV_FILE"
+VAULT="${OBSIDIAN_VAULT_PATH:-$HOME/dev/Obsidian}"
+
+command -v jq >/dev/null || die "jq not found"
+[[ -x "$HERDR" ]] || die "herdr not found at $HERDR"
+[[ -d "$VAULT" ]] || die "vault not found at $VAULT"
+
+wait_for_server() {
+  local waited=0
+  until "$HERDR" status 2>/dev/null | grep -q "status: running"; do
+    if (( waited >= SERVER_TIMEOUT )); then
+      die "herdr server did not come up within ${SERVER_TIMEOUT}s"
+    fi
+    waited=$(( waited + 1 ))
+    sleep 1
+  done
+}
+
+pane_ids() {
+  "$HERDR" pane list | jq -r '.result.panes[].pane_id'
+}
+
+pane_runs_claude() {
+  "$HERDR" pane process-info --pane "$1" \
+    | jq -e '[.result.process_info.foreground_processes[]?.cmdline]
+             | map(test("claude")) | any' >/dev/null 2>&1
+}
+
+wait_for_server
+
+for pane in $(pane_ids); do
+  if pane_runs_claude "$pane"; then
+    echo "vault-hub-ensure-pane: claude already running in $pane, nothing to do"
+    exit 0
+  fi
+done
+
+target=$(pane_ids | head -1)
+
+if [[ -z "$target" ]]; then
+  target=$("$HERDR" workspace create --cwd "$VAULT" --label vault --no-focus \
+    | jq -r '.result.root_pane.pane_id')
+  [[ -n "$target" && "$target" != "null" ]] || die "could not create the vault workspace"
+fi
+
+"$HERDR" pane run "$target" "$WRAPPER"
+echo "vault-hub-ensure-pane: started $WRAPPER in $target"

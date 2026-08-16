@@ -1,0 +1,31 @@
+#!/bin/bash
+# Usage: vault-reset
+#
+# Restarts the vault hub pane on a clean conversation. For when the session has
+# accumulated too much history and drifted from its priming in AGENTS.md.
+
+set -euo pipefail
+
+HERDR="$HOME/.local/bin/herdr"
+
+die() { echo "vault-reset: $*" >&2; exit 1; }
+
+command -v jq >/dev/null || die "jq not found"
+[[ -x "$HERDR" ]] || die "herdr not found at $HERDR"
+
+target=""
+for pane in $("$HERDR" pane list | jq -r '.result.panes[].pane_id'); do
+  if "$HERDR" pane process-info --pane "$pane" \
+      | jq -e '[.result.process_info.foreground_processes[]?.cmdline]
+               | map(test("claude")) | any' >/dev/null 2>&1; then
+    target="$pane"
+    break
+  fi
+done
+
+[[ -n "$target" ]] || die "no pane is running claude; run vault-hub-ensure-pane"
+
+"$HERDR" pane send-keys "$target" C-c
+sleep 2
+"$HERDR" pane run "$target" vault-claude --fresh
+echo "vault-reset: restarted $target on a fresh conversation"

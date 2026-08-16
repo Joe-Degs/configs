@@ -27,3 +27,11 @@ fi
 
 # opencode
 export PATH=/home/joe/.opencode/bin:$PATH
+
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+if [ -f "$HOME/.config/vault-hub.env" ]; then
+  set -a
+  source "$HOME/.config/vault-hub.env"
+  set +a
+fi

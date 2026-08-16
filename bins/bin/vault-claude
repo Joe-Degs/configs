@@ -1,0 +1,40 @@
+#!/bin/bash
+# Usage: vault-claude [--fresh]
+#
+# Starts the Obsidian vault hub Claude session.
+#   default   resume the most recent conversation in the vault
+#   --fresh   start a clean conversation (used by vault-reset)
+#
+# Remote Control is always on so the Claude mobile app and claude.ai/code can drive this
+# same session. The flag lives here rather than in remoteControlAtStartup because
+# ~/.claude/settings.json is stowed and shared with the MacBook.
+
+set -euo pipefail
+
+ENV_FILE="$HOME/.config/vault-hub.env"
+SYNC="$HOME/.claude/skills/obsidian-vault/scripts/sync-repo.sh"
+
+# shellcheck source=/dev/null
+[[ -f "$ENV_FILE" ]] && source "$ENV_FILE"
+VAULT="${OBSIDIAN_VAULT_PATH:-$HOME/dev/Obsidian}"
+
+if [[ ! -d "$VAULT" ]]; then
+  echo "vault-claude: vault not found at $VAULT" >&2
+  exit 1
+fi
+
+if ! command -v claude >/dev/null; then
+  echo "vault-claude: claude not installed. Run bootstrap-vault-hub.sh" >&2
+  exit 1
+fi
+
+# Read-only. Sync is manual by design; this only surfaces drift so you can decide.
+[[ -x "$SYNC" ]] && "$SYNC" "$VAULT" status || true
+
+cd "$VAULT"
+
+if [[ "${1:-}" == "--fresh" ]]; then
+  exec claude --remote-control
+fi
+
+exec claude --remote-control --continue

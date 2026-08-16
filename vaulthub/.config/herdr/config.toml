@@ -1,0 +1,5 @@
+[session]
+# Deliberately off. herdr restores a Claude Code pane with a bare `claude --resume <id>`,
+# which drops --remote-control and kills mobile access on every reboot. vault-hub-ensure-pane
+# owns the pane lifecycle instead. Re-enabling this will silently break the Claude app.
+resume_agents_on_restore = false

@@ -1,22 +1,20 @@
 ---
 name: obsidian-vault
 description: |
-  Routes natural language to Obsidian capture commands. Triggers on:
-  spending ("spent", "bought", "paid", "log spending"), tasks ("add task", "todo", "remind me"), project tasks ("add project task", "project follow-up"),
-  workouts ("went to gym", "swam", "ran", "workout"), evenings ("build night", "drift", "productive evening"),
-  notes ("note to self", "capture note"), lists ("add to reading list", "add to list"),
-  savings ("saved", "deposited", "savings fund"), reviews ("how was my week", "monthly review"),
-  bored/stuck ("bored", "stuck", "what should I do", "what now", "need something to do"),
-  completion ("done with", "finished reading", "read that article", "watched that", "listened to"),
-  syncing ("sync vault", "sync obsidian", "sync configs", "push my changes"),
-  planning ("plan", "deep plan", "help me plan", "let's plan"),
-  context ("pull context", "get context", "what do I have on", "find my notes on"),
-  evidence ("evidence pack", "career evidence", "what evidence do I have for", "evidence gaps", "what gaps do I have in my evidence").
+  Use when the user says "project folder for Hubtel ML Agents", "project notes for Hubtel ML Agents", "work plans for Hubtel ML Agents", "add project task for Hubtel ML Agents", "project folder for Golly Express", "project notes for Golly Express", "work plans for Golly Express", or "add project task for Golly Express". Also use for Obsidian, vault, inbox, current inbox, project folder, project notes, work plans, Golly Express, Hubtel ML Agents, Hubtel-ML-Agents, Spitfire, dit, nt-mips, Application Tracker, note to self, capture note, add task, todo, spent, workout, sync vault, pull context, evidence pack, or evidence gaps. Routes to Obsidian slash commands and vault paths; note captures use /note, project tasks use /project-task, and inbox writes go through scripts.
 ---
 
 # Obsidian vault
 
-Routes natural language capture requests to the appropriate slash command.
+Routes natural language capture, search, and context requests to the right Obsidian location or slash command.
+
+Fast path examples:
+
+- `project folder for Hubtel ML Agents` -> `Areas/Projects/Hubtel-ML-Agents/`
+- `project notes for Golly Express` -> `Areas/Projects/Golly-Express/`
+- `work plans for Golly Express` -> current inbox from `{baseDir}/scripts/inbox-path.sh`, then `Areas/Projects/Golly-Express/`, then `Areas/*-Plans/`
+- `note to self: check the memory leak` -> `/note random "check the memory leak"`
+- `add project task to inspect rerank answer quality for Hubtel ML Agents` -> `/project-task add Areas/Projects/Hubtel-ML-Agents/selfhosted-llm/selfhosted-llm-devlog-2026-05-12 next "inspect rerank answer quality"`
 
 ## Routing table
 
@@ -41,6 +39,9 @@ Routes natural language capture requests to the appropriate slash command.
 | "let's plan my trip to ireland" | `/deepplan` | → /deepplan ireland trip |
 | "what do I have on emulator" | `/pull-context` | → /pull-context emulator |
 | "find my notes on distributed systems" | `/pull-context` | → /pull-context distributed systems |
+| "where are the project notes for Golly Express" | vault map | → `Areas/Projects/Golly-Express/` |
+| "project folder for Hubtel ML Agents" | vault map | → `Areas/Projects/Hubtel-ML-Agents/` |
+| "work plans for Golly Express" | current inbox, then project folder | → current inbox from `{baseDir}/scripts/inbox-path.sh`, then `Areas/Projects/Golly-Express/` |
 | "what evidence do I have for platform roles" | `/evidence-pack` | → /evidence-pack platform engineer |
 | "what gaps do I have in my career evidence" | `/evidence-gaps` | → /evidence-gaps |
 
@@ -50,7 +51,70 @@ Routes natural language capture requests to the appropriate slash command.
 2. Extract relevant values (amount, category, duration, description, etc.)
 3. Follow the corresponding command's instructions to execute
 4. For work notes, prefix the content with the project name and a colon (example: `atlas-metrics: ...`). Do not add a literal `project:` prefix. Infer the project from context when possible. If unknown, ask for the project name.
-5. For project-specific follow-ups, use `/project-task` when the target note is known or inferable. Use `/task` only for the global inbox.
+5. For project-specific follow-ups, use `/project-task` when the target note is known or inferable. The target must be an existing markdown note, not a project folder. If only the project is known and several notes could match, inspect the project folder or ask which note to use. Use `/task` only for the global inbox.
+6. For path or location questions, answer with the vault path. Do not route to `/pull-context` unless the user asks to search or summarize context.
+7. For project work-plan questions, inspect the current inbox first because daily plans live under `#work plan:` or `#personal plan:` there, then inspect the project folder and `Areas/*-Plans/` if needed.
+8. Do not invent command names. Note captures route to `/note`, never `/capture-note`. Project tasks route to `/project-task`, never `/add-project-task`, and never pass a directory as the note argument.
+
+## Vault file placement rules
+
+- Never create new files or folders at the Obsidian vault root unless the user explicitly asks for a root-level vault file.
+- Project plans, implementation plans, design docs, and continuation notes belong inside the relevant project folder under `Areas/Projects/<project>/`.
+- If no project folder exists for the work, ask where it belongs or create a project folder under `Areas/Projects/` before saving durable planning files.
+- Use `ScratchPad/` only for temporary notes or explicitly scratchpad-style work, not durable project plans.
+
+## Vault map
+
+Use `AGENTS.md` at the vault root as the source of truth for the vault map. It defines where things go and the priority search order.
+
+`HOME.md` is a dashboard, not a source of truth. Do not use it as primary context.
+
+Get the current inbox path with `{baseDir}/scripts/inbox-path.sh`. Do not guess the month manually unless the user names a specific `YYYY-MM` month.
+
+Do not edit `Inbox/YYYY-MM.md` directly. Inbox entries must go through the capture commands and scripts so formats stay valid.
+
+### where things go
+
+- tasks, notes, lists, spending, workouts: `Inbox/YYYY-MM.md` through commands/scripts only
+- daily plans: `#work plan:` or `#personal plan:` in the inbox notes section, through commands/scripts only
+- active projects (work, personal, client): `Areas/Projects/`
+- plans: `Areas/*-Plans/`
+- subject notes: `Resources/Notes/`
+- book notes: `Resources/Book-Notes/`
+- scratch and drafts: `ScratchPad/`
+- long-term archive: `Archive/`, `_Revista/`, `__Books/`, `__PDFs/`, `__Papers/`, `Excalidraw/`
+
+### priority search order
+
+- current inbox from `{baseDir}/scripts/inbox-path.sh`, `Areas/Context/`, `Config.md`
+- `Areas/Projects/`, `Areas/*-Plans/`
+- `Journal/Weekly/`, `Journal/Monthly/`
+- `Resources/Notes/`, `Resources/Book-Notes/`, `ScratchPad/`
+- `Archive/`, `_Revista/`, `__Books/`, `__PDFs/`, `__Papers/`, `Excalidraw/`
+
+### project alias shortcuts
+
+Use these shortcuts before searching when the user names a common project. They exist to resolve spoken project names quickly.
+
+| user phrase | path |
+|-------------|------|
+| application tracker project | `Areas/Projects/Application-Tracker/` |
+| dit | `Areas/Projects/dit/` |
+| Golly Express, Golly | `Areas/Projects/Golly-Express/` |
+| Hubtel deployment templates | `Areas/Projects/Hubtel-Deployment-Templates/` |
+| Hubtel ML Agents, self-hosted LLM | `Areas/Projects/Hubtel-ML-Agents/` |
+| nt-mips, NT MIPS | `Areas/Projects/nt-mips/` |
+| Spitfire | `Areas/Projects/Spitfire/` |
+| Spitfire Docker | `Areas/Projects/Spitfire-Docker.md` |
+| algorithms mastery | `Areas/Projects/Algorithms-Mastery.md` |
+| DDIA study | `Areas/Projects/DDIA-Study.md` |
+| math fundamentals | `Areas/Projects/Math-Fundamentals.md` |
+| Nexus Technologies | `Areas/Projects/Nexus-Technologies.md` |
+| novel reading | `Areas/Projects/Novel-Reading.md` |
+| reading tracker | `Areas/Projects/Reading-Tracker.md` |
+| turmoil distributed systems | `Areas/Projects/Turmoil-Distributed-Systems.md` |
+
+When a user asks for a project folder by name, use the alias map first. If the name is not listed, check `Areas/Projects/` before doing a wider vault search.
 
 ## Command locations
 
