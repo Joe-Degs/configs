@@ -37,4 +37,13 @@ if [[ "${1:-}" == "--fresh" ]]; then
   exec claude --remote-control
 fi
 
-exec claude --remote-control --continue
+# `claude --continue` exits with "No conversation found to continue" rather than starting
+# a new one, so only pass it when this directory actually has history. Claude keys
+# conversations by cwd with slashes turned into dashes.
+project_state="$HOME/.claude/projects/${VAULT//\//-}"
+
+if [[ -d "$project_state" ]] && compgen -G "$project_state/*.jsonl" >/dev/null; then
+  exec claude --remote-control --continue
+fi
+
+exec claude --remote-control
